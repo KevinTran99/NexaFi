@@ -7,13 +7,14 @@ pragma solidity ^0.8.24;
 */
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 interface ITokenRegistry {
     function mint(address _recipient, uint256 _id, uint256 _amount) external;
     function burn(address _holder, uint256 _id, uint256 _amount) external;
 }
 
-contract EUAllowanceNFT is Ownable {
+contract EUAllowanceNFT is Ownable, ReentrancyGuard {
     ITokenRegistry public tokenRegistry;
     uint256 public constant EUA_ID = 1;
 
@@ -23,7 +24,7 @@ contract EUAllowanceNFT is Ownable {
         tokenRegistry = ITokenRegistry(_tokenRegistryAddress);
     }
 
-    function mintEUAs(uint256 _amount) external {
+    function mintEUAs(uint256 _amount) external nonReentrant{
         require(mintAllowances[msg.sender] >= _amount, "Not enough mint allowance" );
         mintAllowances[msg.sender] -= _amount;
         tokenRegistry.mint(msg.sender, EUA_ID, _amount);

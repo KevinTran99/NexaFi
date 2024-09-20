@@ -8,8 +8,9 @@ pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract TokenRegistry is ERC1155, AccessControl {
+contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
 
     event NFTMint (address indexed mintAddress, uint256 id, uint256 amount);
@@ -20,7 +21,7 @@ contract TokenRegistry is ERC1155, AccessControl {
         _grantRole(MINT_ROLE, msg.sender);
     }
 
-    function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) {
+    function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) nonReentrant{
         _mint(_recipient, _id, _amount, "");
 
         emit NFTMint(_recipient, _id, _amount);
