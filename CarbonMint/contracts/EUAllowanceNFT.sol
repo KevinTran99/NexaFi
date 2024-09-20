@@ -29,7 +29,12 @@ contract EUAllowanceNFT is Ownable {
         tokenRegistry.mint(_recipient, EUA_ID, _amount);
     }
 
-    function setMintAllowance(address _account, uint256 _allowance) external onlyOwner {
-        mintAllowances[_account] = _allowance;
+    function increaseMintAllowance(address _account, uint256 _amount) external onlyOwner {
+        mintAllowances[_account] += _amount;
+    }
+
+    function decreaseMintAllowance(address _account, uint256 _amount) external onlyOwner {
+        require(mintAllowances[_account] >= _amount, "Insufficient allowance");
+        mintAllowances[_account] -= _amount;
     }
 }
