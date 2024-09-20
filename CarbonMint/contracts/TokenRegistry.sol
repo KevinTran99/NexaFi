@@ -34,6 +34,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         emit NFTBurn(_holder, _id, _amount);
     }
 
+    function updateURI(string memory _newURI) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _setURI(_newURI);
+    }
+
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
