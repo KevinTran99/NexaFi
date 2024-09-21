@@ -14,7 +14,8 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
 
     event NFTMint (address indexed mintAddress, uint256 id, uint256 amount);
-    event NFTBurn (address indexed burnAddress, uint256 id, uint256 amount);
+    event BurnedForExchange (address indexed burnAddress, uint256 id, uint256 amount);
+    event BurnedForRetirement (address indexed burnAddress, uint256 id, uint256 amount);
 
     constructor() ERC1155("https://example.com/metadata/{id}.json") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -27,11 +28,20 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         emit NFTMint(_recipient, _id, _amount);
     }
 
-    function burn(address _holder, uint256 _id, uint256 _amount) external {
-        require(msg.sender == _holder, "You can only burn your own tokens");
-        _burn(_holder, _id, _amount);
+    function burnForExchange(uint256 _id, uint256 _amount) external {
+        require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
 
-        emit NFTBurn(_holder, _id, _amount);
+        _burn(msg.sender, _id, _amount);
+
+        emit BurnedForExchange(msg.sender, _id, _amount);
+    }
+
+    function burnForRetirement(uint256 _id, uint256 _amount) external {
+        require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
+
+        _burn(msg.sender, _id, _amount);
+
+        emit BurnedForRetirement(msg.sender, _id, _amount);
     }
 
     function updateURI(string memory _newURI) external onlyRole(DEFAULT_ADMIN_ROLE) {
