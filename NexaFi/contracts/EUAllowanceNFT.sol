@@ -7,7 +7,7 @@ pragma solidity ^0.8.24;
 */
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 interface ITokenRegistry {
     function mint(address _recipient, uint256 _id, uint256 _amount) external;
