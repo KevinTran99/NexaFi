@@ -10,6 +10,7 @@ cache/
 coverage/
 coverage.json
 ignition/deployments/chain-31337
+typechain-types/
 
 # Remix dependencies
 .deps
