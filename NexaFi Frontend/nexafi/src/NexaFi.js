@@ -1,4 +1,5 @@
 import React from 'react';
+import Home from './components/Home';
 
 const NexaFi = () => {
   return (
@@ -6,7 +7,7 @@ const NexaFi = () => {
       <nav>
         <ul>
           <li>
-            <a href="#main">Main</a>
+            <a href="#home">Home</a>
           </li>
           <li>
             <a href="#about">Vision</a>
@@ -17,7 +18,9 @@ const NexaFi = () => {
         </ul>
       </nav>
 
-      <section id="main" className="main-section"></section>
+      <section id="home" className="home-section">
+        <Home />
+      </section>
     </div>
   );
 };
