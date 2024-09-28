@@ -1,4 +1,3 @@
-import './App.css';
 import NexaFi from './NexaFi';
 
 function App() {

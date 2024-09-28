@@ -4,10 +4,6 @@
   box-sizing: border-box;
 }
 
-.wrapper {
-  background-color: rgb(270, 250, 255);
-}
-
 nav {
   position: fixed;
   display: flex;

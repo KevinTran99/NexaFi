@@ -1,10 +1,11 @@
 import React from 'react';
+import './styles/nav.css';
 import Home from './components/Home';
 import Vision from './components/Vision';
 
 const NexaFi = () => {
   return (
-    <div className="wrapper">
+    <div>
       <nav>
         <ul>
           <li>
