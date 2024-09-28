@@ -8,13 +8,9 @@ const NexaFi = () => {
     <div>
       <Navbar />
 
-      <section id="home" className="home-section">
-        <Home />
-      </section>
+      <Home />
 
-      <section id="vision" className="vision-section">
-        <Vision />
-      </section>
+      <Vision />
     </div>
   );
 };
