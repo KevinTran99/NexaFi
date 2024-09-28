@@ -1,24 +1,12 @@
 import React from 'react';
-import './styles/nav.css';
+import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Vision from './components/Vision';
 
 const NexaFi = () => {
   return (
     <div>
-      <nav>
-        <ul>
-          <li>
-            <a href="#home">Home</a>
-          </li>
-          <li>
-            <a href="#vision">Vision</a>
-          </li>
-          <li>
-            <a href="#footer">Team</a>
-          </li>
-        </ul>
-      </nav>
+      <Navbar />
 
       <section id="home" className="home-section">
         <Home />
