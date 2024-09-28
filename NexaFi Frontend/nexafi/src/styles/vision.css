@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap');
+
+.vision-content {
+  display: flex;
+  justify-content: center;
+  padding: 6rem;
+  height: 100%;
+  width: 100%;
+  gap: 7rem;
+}
+
+.vision-header {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 300px;
+  padding-left: 1rem;
+  border-right: 2px solid #2f4f4f;
+}
+
+.vision-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 500;
+  line-height: 0.7;
+  margin-bottom: 20px;
+  color: #2f4f4f;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.vision-main {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+}
+
+.vision-image {
+  height: 450px;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.vision-main p {
+  font-size: 1rem;
+  font-weight: 550;
+  font-family: 'Lato', sans-serif;
+  color: #2f4f4f;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}

@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap');
-
 * {
   margin: 0;
   padding: 0;
@@ -13,18 +10,19 @@
 
 nav {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   top: 0;
   height: 60px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.8);
-  padding: 10px 0;
   z-index: 1000;
 }
 
 nav ul {
   list-style: none;
   display: flex;
-  justify-content: center;
 }
 
 nav ul li {
@@ -40,92 +38,4 @@ nav ul li a {
 
 nav ul li a:hover {
   text-decoration: underline;
-}
-
-.home-section {
-  height: 960px;
-}
-
-.home-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.background-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.overlay-text {
-  position: relative;
-  z-index: 1;
-  color: white;
-  font-size: 4rem;
-  text-align: center;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-}
-
-.tagline {
-  color: white;
-  font-size: 1.5rem;
-  margin-top: 10px;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
-}
-
-.vision-content {
-  display: flex;
-  justify-content: center;
-  padding: 6rem;
-  height: 100%;
-  width: 100%;
-  gap: 7rem;
-}
-
-.vision-header {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  width: 300px;
-  padding-left: 1rem;
-  border-right: 2px solid #2f4f4f;
-}
-
-.vision-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 4rem;
-  font-weight: 500;
-  line-height: 0.7;
-  margin-bottom: 20px;
-  color: #2f4f4f;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.vision-main {
-  display: flex;
-  flex-direction: column;
-  width: 800px;
-}
-
-.vision-image {
-  height: 450px;
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 5px;
-}
-
-.vision-main p {
-  font-size: 1rem;
-  font-weight: 550;
-  font-family: 'Lato', sans-serif;
-  color: #2f4f4f;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/vision.css';
 
 const Vision = () => {
   return (
