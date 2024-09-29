@@ -5,14 +5,14 @@ const Vision = () => {
   return (
     <section id="vision" className="vision-section">
       <div className="vision-content">
-        <div className="vision-header">
+        <header className="vision-header">
           <h2>
             <span>Our</span>
             <span>Vision</span>
           </h2>
-        </div>
+        </header>
 
-        <div className="vision-main">
+        <article className="vision-article">
           <img
             src="/windturbine.jpg"
             alt="Wind turbines generating renewable energy on a lush green field beneath a clear sky"
@@ -27,7 +27,7 @@ const Vision = () => {
             environmental assets, we strive to make climate solutions more inclusive and accessible, driving impactful
             change toward a greener, net-zero future.
           </p>
-        </div>
+        </article>
       </div>
     </section>
   );

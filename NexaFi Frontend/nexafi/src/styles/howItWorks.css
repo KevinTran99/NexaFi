@@ -13,7 +13,7 @@
   margin-bottom: 1rem;
 }
 
-.howItWorks-header h1 {
+.howItWorks-header h2 {
   font-family: 'Playfair Display', serif;
   font-size: 3.5rem;
   color: #2f4f4f;
@@ -33,7 +33,7 @@
   max-width: 500px;
 }
 
-.howItWorks-description h2 {
+.howItWorks-description h3 {
   font-family: 'Playfair Display', serif;
   font-size: 2.5rem;
   color: #2f4f4f;
