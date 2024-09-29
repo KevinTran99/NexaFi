@@ -12,6 +12,9 @@ const Navbar = () => {
           <a href="#vision">Vision</a>
         </li>
         <li>
+          <a href="#howItWorks">How It Works</a>
+        </li>
+        <li>
           <a href="#footer">Team</a>
         </li>
       </ul>
