@@ -6,8 +6,10 @@ const Vision = () => {
     <section id="vision" className="vision-section">
       <div className="vision-content">
         <div className="vision-header">
-          <h1>Our</h1>
-          <h1>Vision</h1>
+          <h2>
+            <span>Our</span>
+            <span>Vision</span>
+          </h2>
         </div>
 
         <div className="vision-main">
