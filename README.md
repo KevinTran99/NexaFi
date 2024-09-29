@@ -1,4 +1,4 @@
-# CarbonMint
+# NexaFi
 
 ## Licensing and Usage
 
