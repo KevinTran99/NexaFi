@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Vision from './components/Vision';
 import HowItWorks from './components/HowItWorks';
+import Benefits from './components/Benefits';
 
 const NexaFi = () => {
   return (
@@ -14,6 +15,8 @@ const NexaFi = () => {
       <Vision />
 
       <HowItWorks />
+
+      <Benefits />
     </div>
   );
 };
