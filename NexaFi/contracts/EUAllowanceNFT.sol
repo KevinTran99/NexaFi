@@ -11,7 +11,6 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 interface ITokenRegistry {
     function mint(address _recipient, uint256 _id, uint256 _amount) external;
-    function burn(address _holder, uint256 _id, uint256 _amount) external;
 }
 
 contract EUAllowanceNFT is Ownable, ReentrancyGuard {
