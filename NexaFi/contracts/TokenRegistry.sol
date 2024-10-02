@@ -13,7 +13,8 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
 
-    mapping(uint256 => uint256) public tokenSupply;
+    mapping(uint256 => uint256) public totalMinted;
+    mapping(uint256 => uint256) public totalBurned;
     mapping(address => bool) private restrictedAddresses;
 
     event NFTMint(address indexed mintAddress, uint256 id, uint256 amount);
@@ -33,7 +34,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
 
     function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) notRestricted(_recipient) nonReentrant{
         _mint(_recipient, _id, _amount, "");
-        tokenSupply[_id] += _amount;
+        totalMinted[_id] += _amount;
 
         emit NFTMint(_recipient, _id, _amount);
     }
@@ -42,7 +43,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
 
         _burn(msg.sender, _id, _amount);
-        tokenSupply[_id] -= _amount;
+        totalBurned[_id] += _amount;
 
         emit BurnedForExchange(msg.sender, _id, _amount);
     }
@@ -51,7 +52,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
 
         _burn(msg.sender, _id, _amount);
-        tokenSupply[_id] -= _amount;
+        totalBurned[_id] += _amount;
 
         emit BurnedForRetirement(msg.sender, _id, _amount);
     }
