@@ -57,6 +57,14 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         emit BurnedForRetirement(msg.sender, _id, _amount);
     }
 
+    function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _amount, bytes memory _data) public override notRestricted(_from) notRestricted(_to) {
+        super.safeTransferFrom(_from, _to, _id, _amount, _data);
+    }
+
+    function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values, bytes memory _data) public override notRestricted(_from) notRestricted(_to) {
+        super.safeBatchTransferFrom(_from, _to, _ids, _values, _data);
+    }
+
     function updateURI(string memory _newURI) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _setURI(_newURI);
     }
