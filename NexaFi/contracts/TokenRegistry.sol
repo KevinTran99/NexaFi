@@ -32,11 +32,23 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         _grantRole(MINT_ROLE, msg.sender);
     }
 
-    function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) notRestricted(_recipient) nonReentrant{
+    function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) notRestricted(_recipient) nonReentrant {
         _mint(_recipient, _id, _amount, "");
         totalMinted[_id] += _amount;
 
         emit NFTMint(_recipient, _id, _amount);
+    }
+
+    function mintBatch(address[] memory _recipients, uint256[] memory _ids, uint256[] memory _amounts) external onlyRole(MINT_ROLE) nonReentrant {
+        require(_recipients.length == _ids.length && _recipients.length == _amounts.length, "Array lengths must match.");
+
+        for (uint256 i = 0; i < _recipients.length; i++) {
+            require(!restrictedAddresses[_recipients[i]], "Address is restricted.");
+
+            _mint(_recipients[i], _ids[i], _amounts[i], "");
+
+            emit NFTMint(_recipients[i], _ids[i], _amounts[i]);
+        }
     }
 
     function burnForExchange(uint256 _id, uint256 _amount) external notRestricted(msg.sender) {
@@ -55,6 +67,32 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         totalBurned[_id] += _amount;
 
         emit BurnedForRetirement(msg.sender, _id, _amount);
+    }
+
+    function burnBatchForExchange(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) {
+        require(_ids.length == _amounts.length, "Array lengths must match.");
+
+        for (uint256 i = 0; i < _ids.length; i++) {
+            require(balanceOf(msg.sender, _ids[i]) >= _amounts[i], "Insufficient NFT balance to burn");
+
+            _burn(msg.sender, _ids[i], _amounts[i]);
+            totalBurned[_ids[i]] += _amounts[i];
+
+            emit BurnedForExchange(msg.sender, _ids[i], _amounts[i]);
+        }
+    }
+
+    function burnBatchForRetirement(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) {
+        require(_ids.length == _amounts.length, "Array lengths must match.");
+
+        for (uint256 i = 0; i < _ids.length; i++) {
+            require(balanceOf(msg.sender, _ids[i]) >= _amounts[i], "Insufficient NFT balance to burn.");
+
+            _burn(msg.sender, _ids[i], _amounts[i]);
+            totalBurned[_ids[i]] += _amounts[i];
+
+            emit BurnedForRetirement(msg.sender, _ids[i], _amounts[i]);
+        }
     }
 
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _amount, bytes memory _data) public override notRestricted(_from) notRestricted(_to) {
