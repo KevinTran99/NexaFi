@@ -18,10 +18,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     mapping(address => bool) private restrictedAddresses;
 
     event NFTMint(address indexed recipient, uint256 id, uint256 amount);
-    event MintSkipped(address indexed recipient, uint256 id);
+    event MintSkippedDueToRestrictedAddress(address indexed recipient);
     event BurnedForExchange(address indexed burner, uint256 id, uint256 amount);
     event BurnedForRetirement(address indexed burner, uint256 id, uint256 amount);
-    event BurnSkipped(address indexed burner, uint256 id);
+    event BurnSkippedDueToInsufficientBalance(address indexed burner, uint256 id, uint256 balance, uint256 required);
     event AddressRestrictionUpdated(address indexed restrictedAddress, bool status);
 
     error ArrayLengthsMismatch(uint256 recipientsLength, uint256 idsLength, uint256 amountsLength);
@@ -59,7 +59,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
 
         for (uint256 i = 0; i < _recipients.length; i++) {
             if (restrictedAddresses[_recipients[i]]) {
-                emit MintSkipped(_recipients[i], _ids[i]);
+                emit MintSkippedDueToRestrictedAddress(_recipients[i]);
                 continue;
             }
 
@@ -111,8 +111,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         }
 
         for (uint256 i = 0; i < _ids.length; i++) {
-            if (balanceOf(msg.sender, _ids[i]) < _amounts[i]) {
-                emit BurnSkipped(msg.sender, _ids[i]);
+            uint256 balance = balanceOf(msg.sender, _ids[i]);
+
+            if (balance < _amounts[i]) {
+                emit BurnSkippedDueToInsufficientBalance(msg.sender, _ids[i], balance, _amounts[i]);
                 continue;
             }
 
@@ -132,8 +134,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         }
 
         for (uint256 i = 0; i < _ids.length; i++) {
-            if (balanceOf(msg.sender, _ids[i]) < _amounts[i]) {
-                emit BurnSkipped(msg.sender, _ids[i]);
+            uint256 balance = balanceOf(msg.sender, _ids[i]);
+
+            if (balance < _amounts[i]) {
+                emit BurnSkippedDueToInsufficientBalance(msg.sender, _ids[i], balance, _amounts[i]);
                 continue;
             }
 
