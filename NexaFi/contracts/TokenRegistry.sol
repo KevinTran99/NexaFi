@@ -34,7 +34,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
 
     function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) notRestricted(_recipient) nonReentrant {
         _mint(_recipient, _id, _amount, "");
-        totalMinted[_id] += _amount;
+
+        unchecked {
+            totalMinted[_id] += _amount;
+        }
 
         emit NFTMint(_recipient, _id, _amount);
     }
@@ -46,7 +49,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
             require(!restrictedAddresses[_recipients[i]], "Address is restricted.");
 
             _mint(_recipients[i], _ids[i], _amounts[i], "");
-            totalMinted[_ids[i]] += _amounts[i];
+
+            unchecked {
+                totalMinted[_ids[i]] += _amounts[i];
+            }
 
             emit NFTMint(_recipients[i], _ids[i], _amounts[i]);
         }
@@ -56,7 +62,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
 
         _burn(msg.sender, _id, _amount);
-        totalBurned[_id] += _amount;
+        
+        unchecked {
+            totalBurned[_id] += _amount;
+        }
 
         emit BurnedForExchange(msg.sender, _id, _amount);
     }
@@ -65,7 +74,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
 
         _burn(msg.sender, _id, _amount);
-        totalBurned[_id] += _amount;
+        
+        unchecked {
+            totalBurned[_id] += _amount;
+        }
 
         emit BurnedForRetirement(msg.sender, _id, _amount);
     }
@@ -77,7 +89,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
             require(balanceOf(msg.sender, _ids[i]) >= _amounts[i], "Insufficient NFT balance to burn");
 
             _burn(msg.sender, _ids[i], _amounts[i]);
-            totalBurned[_ids[i]] += _amounts[i];
+            
+            unchecked {
+                totalBurned[_ids[i]] += _amounts[i];
+            }
 
             emit BurnedForExchange(msg.sender, _ids[i], _amounts[i]);
         }
@@ -90,7 +105,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
             require(balanceOf(msg.sender, _ids[i]) >= _amounts[i], "Insufficient NFT balance to burn.");
 
             _burn(msg.sender, _ids[i], _amounts[i]);
-            totalBurned[_ids[i]] += _amounts[i];
+            
+            unchecked {
+                totalBurned[_ids[i]] += _amounts[i];
+            }
 
             emit BurnedForRetirement(msg.sender, _ids[i], _amounts[i]);
         }
