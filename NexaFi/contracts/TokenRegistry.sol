@@ -46,6 +46,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
             require(!restrictedAddresses[_recipients[i]], "Address is restricted.");
 
             _mint(_recipients[i], _ids[i], _amounts[i], "");
+            totalMinted[_ids[i]] += _amounts[i];
 
             emit NFTMint(_recipients[i], _ids[i], _amounts[i]);
         }
