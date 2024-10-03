@@ -19,12 +19,18 @@ contract EUAllowanceNFT is Ownable, ReentrancyGuard {
 
     mapping(address => uint256) public mintAllowances;
 
+    error InsufficientMintAllowance(address caller, uint256 allowance, uint256 required);
+    error AllowanceTooLow(address account, uint256 allowance, uint256 required);
+
     constructor(address _tokenRegistryAddress) Ownable(msg.sender) {
         tokenRegistry = ITokenRegistry(_tokenRegistryAddress);
     }
 
     function mintEUAs(uint256 _amount) external nonReentrant{
-        require(mintAllowances[msg.sender] >= _amount, "Not enough mint allowance" );
+        if (mintAllowances[msg.sender] < _amount) {
+            revert InsufficientMintAllowance(msg.sender, mintAllowances[msg.sender], _amount);
+        }
+
         mintAllowances[msg.sender] -= _amount;
         tokenRegistry.mint(msg.sender, EUA_ID, _amount);
     }
@@ -34,7 +40,10 @@ contract EUAllowanceNFT is Ownable, ReentrancyGuard {
     }
 
     function decreaseMintAllowance(address _account, uint256 _amount) external onlyOwner {
-        require(mintAllowances[_account] >= _amount, "Insufficient allowance");
+        if (mintAllowances[_account] < _amount) {
+            revert AllowanceTooLow(_account, mintAllowances[_account], _amount);
+        }
+
         mintAllowances[_account] -= _amount;
     }
 }
