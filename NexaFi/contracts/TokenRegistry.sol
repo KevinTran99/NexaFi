@@ -18,8 +18,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     mapping(address => bool) private restrictedAddresses;
 
     event NFTMint(address indexed mintAddress, uint256 id, uint256 amount);
+    event MintSkipped(address indexed recipient, uint256 id);
     event BurnedForExchange(address indexed burnAddress, uint256 id, uint256 amount);
     event BurnedForRetirement(address indexed burnAddress, uint256 id, uint256 amount);
+    event BurnSkipped(address indexed burner, uint256 id);
     event AddressRestrictionUpdated(address indexed restrictedAddress, bool status);
 
     modifier notRestricted(address _address) {
@@ -46,7 +48,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         require(_recipients.length == _ids.length && _recipients.length == _amounts.length, "Array lengths must match.");
 
         for (uint256 i = 0; i < _recipients.length; i++) {
-            require(!restrictedAddresses[_recipients[i]], "Address is restricted.");
+            if (restrictedAddresses[_recipients[i]]) {
+                emit MintSkipped(_recipients[i], _ids[i]);
+                continue;
+            }
 
             _mint(_recipients[i], _ids[i], _amounts[i], "");
 
@@ -86,7 +91,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         require(_ids.length == _amounts.length, "Array lengths must match.");
 
         for (uint256 i = 0; i < _ids.length; i++) {
-            require(balanceOf(msg.sender, _ids[i]) >= _amounts[i], "Insufficient NFT balance to burn");
+            if (balanceOf(msg.sender, _ids[i]) < _amounts[i]) {
+                emit BurnSkipped(msg.sender, _ids[i]);
+                continue;
+            }
 
             _burn(msg.sender, _ids[i], _amounts[i]);
             
@@ -102,7 +110,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         require(_ids.length == _amounts.length, "Array lengths must match.");
 
         for (uint256 i = 0; i < _ids.length; i++) {
-            require(balanceOf(msg.sender, _ids[i]) >= _amounts[i], "Insufficient NFT balance to burn.");
+            if (balanceOf(msg.sender, _ids[i]) < _amounts[i]) {
+                emit BurnSkipped(msg.sender, _ids[i]);
+                continue;
+            }
 
             _burn(msg.sender, _ids[i], _amounts[i]);
             
