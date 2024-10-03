@@ -24,8 +24,16 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     event BurnSkipped(address indexed burner, uint256 id);
     event AddressRestrictionUpdated(address indexed restrictedAddress, bool status);
 
+    error ArrayLengthsMismatch(uint256 recipientsLength, uint256 idsLength, uint256 amountsLength);
+    error InsufficientBalanceForBurn(uint256 balance, uint256 required);
+    error AddressRestricted(address restrictedAddress);
+    error AddressAlreadyRestricted(address restrictedAddress);
+    error AddressNotRestricted(address notRestrictedAddress);
+
     modifier notRestricted(address _address) {
-        require(!restrictedAddresses[_address], "Address is restricted.");
+        if (restrictedAddresses[_address]) {
+            revert AddressRestricted(_address);
+        }
         _;
     }
 
@@ -45,7 +53,9 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function mintBatch(address[] memory _recipients, uint256[] memory _ids, uint256[] memory _amounts) external onlyRole(MINT_ROLE) nonReentrant {
-        require(_recipients.length == _ids.length && _recipients.length == _amounts.length, "Array lengths must match.");
+        if (_recipients.length != _ids.length || _recipients.length != _amounts.length) {
+            revert ArrayLengthsMismatch(_recipients.length, _ids.length, _amounts.length);
+        }
 
         for (uint256 i = 0; i < _recipients.length; i++) {
             if (restrictedAddresses[_recipients[i]]) {
@@ -64,7 +74,9 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function burnForExchange(uint256 _id, uint256 _amount) external notRestricted(msg.sender) {
-        require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
+        if (balanceOf(msg.sender, _id) < _amount) {
+            revert InsufficientBalanceForBurn(balanceOf(msg.sender, _id), _amount);
+        }
 
         _burn(msg.sender, _id, _amount);
         
@@ -76,7 +88,9 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function burnForRetirement(uint256 _id, uint256 _amount) external notRestricted(msg.sender) {
-        require(balanceOf(msg.sender, _id) >= _amount, "Insufficient NFT balance to burn");
+        if (balanceOf(msg.sender, _id) < _amount) {
+            revert InsufficientBalanceForBurn(balanceOf(msg.sender, _id), _amount);
+        }
 
         _burn(msg.sender, _id, _amount);
         
@@ -88,7 +102,9 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function burnBatchForExchange(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) {
-        require(_ids.length == _amounts.length, "Array lengths must match.");
+        if (_ids.length != _amounts.length) {
+            revert ArrayLengthsMismatch(0, _ids.length, _amounts.length);
+        }
 
         for (uint256 i = 0; i < _ids.length; i++) {
             if (balanceOf(msg.sender, _ids[i]) < _amounts[i]) {
@@ -107,7 +123,9 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function burnBatchForRetirement(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) {
-        require(_ids.length == _amounts.length, "Array lengths must match.");
+        if (_ids.length != _amounts.length) {
+            revert ArrayLengthsMismatch(0, _ids.length, _amounts.length);
+        }
 
         for (uint256 i = 0; i < _ids.length; i++) {
             if (balanceOf(msg.sender, _ids[i]) < _amounts[i]) {
@@ -138,14 +156,20 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function restrictAddress(address _address) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(!restrictedAddresses[_address], "Address is already restricted.");
+        if (restrictedAddresses[_address]) {
+            revert AddressAlreadyRestricted(_address);
+        }
+
         restrictedAddresses[_address] = true;
 
         emit AddressRestrictionUpdated(_address, true);
     }
 
     function unrestrictAddress(address _address) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(restrictedAddresses[_address], "Address is not restricted.");
+        if (!restrictedAddresses[_address]) {
+            revert AddressNotRestricted(_address);
+        }
+
         restrictedAddresses[_address] = false;
 
         emit AddressRestrictionUpdated(_address, false);
