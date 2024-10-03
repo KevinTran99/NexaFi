@@ -74,8 +74,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function burnForExchange(uint256 _id, uint256 _amount) external notRestricted(msg.sender) {
-        if (balanceOf(msg.sender, _id) < _amount) {
-            revert InsufficientBalanceForBurn(balanceOf(msg.sender, _id), _amount);
+        uint256 balance = balanceOf(msg.sender, _id);
+
+        if (balance < _amount) {
+            revert InsufficientBalanceForBurn(balance, _amount);
         }
 
         _burn(msg.sender, _id, _amount);
@@ -88,8 +90,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     }
 
     function burnForRetirement(uint256 _id, uint256 _amount) external notRestricted(msg.sender) {
-        if (balanceOf(msg.sender, _id) < _amount) {
-            revert InsufficientBalanceForBurn(balanceOf(msg.sender, _id), _amount);
+        uint256 balance = balanceOf(msg.sender, _id);
+
+        if (balance < _amount) {
+            revert InsufficientBalanceForBurn(balance, _amount);
         }
 
         _burn(msg.sender, _id, _amount);
