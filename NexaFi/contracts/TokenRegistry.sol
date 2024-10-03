@@ -17,10 +17,10 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
     mapping(uint256 => uint256) public totalBurned;
     mapping(address => bool) private restrictedAddresses;
 
-    event NFTMint(address indexed mintAddress, uint256 id, uint256 amount);
+    event NFTMint(address indexed recipient, uint256 id, uint256 amount);
     event MintSkipped(address indexed recipient, uint256 id);
-    event BurnedForExchange(address indexed burnAddress, uint256 id, uint256 amount);
-    event BurnedForRetirement(address indexed burnAddress, uint256 id, uint256 amount);
+    event BurnedForExchange(address indexed burner, uint256 id, uint256 amount);
+    event BurnedForRetirement(address indexed burner, uint256 id, uint256 amount);
     event BurnSkipped(address indexed burner, uint256 id);
     event AddressRestrictionUpdated(address indexed restrictedAddress, bool status);
 
