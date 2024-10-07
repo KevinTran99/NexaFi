@@ -9,8 +9,9 @@ pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
-contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
+contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard, Pausable {
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
 
     mapping(uint256 => uint256) public totalMinted;
@@ -42,7 +43,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         _grantRole(MINT_ROLE, msg.sender);
     }
 
-    function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) notRestricted(_recipient) nonReentrant {
+    function mint(address _recipient, uint256 _id, uint256 _amount) external onlyRole(MINT_ROLE) notRestricted(_recipient) nonReentrant whenNotPaused {
         _mint(_recipient, _id, _amount, "");
 
         unchecked {
@@ -52,7 +53,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         emit NFTMint(_recipient, _id, _amount);
     }
 
-    function mintBatch(address[] memory _recipients, uint256[] memory _ids, uint256[] memory _amounts) external onlyRole(MINT_ROLE) nonReentrant {
+    function mintBatch(address[] memory _recipients, uint256[] memory _ids, uint256[] memory _amounts) external onlyRole(MINT_ROLE) nonReentrant whenNotPaused {
         if (_recipients.length != _ids.length || _recipients.length != _amounts.length) {
             revert ArrayLengthsMismatch(_recipients.length, _ids.length, _amounts.length);
         }
@@ -73,7 +74,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         }
     }
 
-    function burnForExchange(uint256 _id, uint256 _amount) external notRestricted(msg.sender) {
+    function burnForExchange(uint256 _id, uint256 _amount) external notRestricted(msg.sender) whenNotPaused {
         uint256 balance = balanceOf(msg.sender, _id);
 
         if (balance < _amount) {
@@ -89,7 +90,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         emit BurnedForExchange(msg.sender, _id, _amount);
     }
 
-    function burnForRetirement(uint256 _id, uint256 _amount) external notRestricted(msg.sender) {
+    function burnForRetirement(uint256 _id, uint256 _amount) external notRestricted(msg.sender) whenNotPaused {
         uint256 balance = balanceOf(msg.sender, _id);
 
         if (balance < _amount) {
@@ -105,7 +106,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         emit BurnedForRetirement(msg.sender, _id, _amount);
     }
 
-    function burnBatchForExchange(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) {
+    function burnBatchForExchange(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) whenNotPaused {
         if (_ids.length != _amounts.length) {
             revert ArrayLengthsMismatch(0, _ids.length, _amounts.length);
         }
@@ -128,7 +129,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         }
     }
 
-    function burnBatchForRetirement(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) {
+    function burnBatchForRetirement(uint256[] memory _ids, uint256[] memory _amounts) external notRestricted(msg.sender) whenNotPaused {
         if (_ids.length != _amounts.length) {
             revert ArrayLengthsMismatch(0, _ids.length, _amounts.length);
         }
@@ -151,11 +152,11 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         }
     }
 
-    function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _amount, bytes memory _data) public override notRestricted(_from) notRestricted(_to) {
+    function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _amount, bytes memory _data) public override notRestricted(_from) notRestricted(_to) whenNotPaused {
         super.safeTransferFrom(_from, _to, _id, _amount, _data);
     }
 
-    function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values, bytes memory _data) public override notRestricted(_from) notRestricted(_to) {
+    function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values, bytes memory _data) public override notRestricted(_from) notRestricted(_to) whenNotPaused {
         super.safeBatchTransferFrom(_from, _to, _ids, _values, _data);
     }
 
@@ -185,6 +186,14 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
 
     function isRestricted(address _address) external view returns (bool) {
         return restrictedAddresses[_address];
+    }
+
+    function pause() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _pause();
+    }
+
+    function unpause() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _unpause();
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, AccessControl) returns (bool) {
