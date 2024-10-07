@@ -1,0 +1,12 @@
+{
+  "name": "EUA Token",
+  "description": "This NFT represents a European Union Emission Allowance.",
+  "image": "https://bafkreicgxvpkkuretuiru2wpy234vlefb22kvd4fqx2vlxfaosfeykwavi.ipfs.flk-ipfs.xyz",
+  "attributes": [
+    {
+      "trait_type": "Emission Allowance",
+      "value": "1 Ton CO2"
+    }
+  ],
+  "external_url": "https://nexafi.vercel.app/"
+}

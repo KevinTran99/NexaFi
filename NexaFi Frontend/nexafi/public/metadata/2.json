@@ -1,0 +1,12 @@
+{
+  "name": "EUAA Token",
+  "description": "This NFT represents a European Union Aviation Allowance.",
+  "image": "https://bafkreifutlsqd7jbdufyma5kzb7wobxpubksssbybabfiqo2rk3byfivfm.ipfs.flk-ipfs.xyz",
+  "attributes": [
+    {
+      "trait_type": "Aviation Allowance",
+      "value": "1 Ton CO2"
+    }
+  ],
+  "external_url": "https://nexafi.vercel.app/"
+}

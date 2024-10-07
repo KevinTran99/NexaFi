@@ -37,7 +37,7 @@ contract TokenRegistry is ERC1155, AccessControl, ReentrancyGuard {
         _;
     }
 
-    constructor() ERC1155("https://example.com/metadata/{id}.json") {
+    constructor() ERC1155("https://nexafi.vercel.app/metadata/{id}.json") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINT_ROLE, msg.sender);
     }
