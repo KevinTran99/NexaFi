@@ -1,0 +1,601 @@
+[
+  { "constant": false, "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" },
+  { "constant": false, "inputs": [], "name": "AccessControlBadConfirmation", "payable": false, "type": "error" },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": false, "internalType": "bytes32", "name": "neededRole", "type": "bytes32" }
+    ],
+    "name": "AccessControlUnauthorizedAccount",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "restrictedAddress", "type": "address" }],
+    "name": "AddressAlreadyRestricted",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "notRestrictedAddress", "type": "address" }],
+    "name": "AddressNotRestricted",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "restrictedAddress", "type": "address" }],
+    "name": "AddressRestricted",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "recipientsLength", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "idsLength", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amountsLength", "type": "uint256" }
+    ],
+    "name": "ArrayLengthsMismatch",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "balance", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "needed", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+    ],
+    "name": "ERC1155InsufficientBalance",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "approver", "type": "address" }],
+    "name": "ERC1155InvalidApprover",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "idsLength", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "valuesLength", "type": "uint256" }
+    ],
+    "name": "ERC1155InvalidArrayLength",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "operator", "type": "address" }],
+    "name": "ERC1155InvalidOperator",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "receiver", "type": "address" }],
+    "name": "ERC1155InvalidReceiver",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "sender", "type": "address" }],
+    "name": "ERC1155InvalidSender",
+    "payable": false,
+    "type": "error"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "operator", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "owner", "type": "address" }
+    ],
+    "name": "ERC1155MissingApprovalForAll",
+    "payable": false,
+    "type": "error"
+  },
+  { "constant": false, "inputs": [], "name": "EnforcedPause", "payable": false, "type": "error" },
+  { "constant": false, "inputs": [], "name": "ExpectedPause", "payable": false, "type": "error" },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "balance", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "required", "type": "uint256" }
+    ],
+    "name": "InsufficientBalanceForBurn",
+    "payable": false,
+    "type": "error"
+  },
+  { "constant": false, "inputs": [], "name": "ReentrancyGuardReentrantCall", "payable": false, "type": "error" },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "restrictedAddress", "type": "address" },
+      { "indexed": false, "internalType": "bool", "name": "status", "type": "bool" }
+    ],
+    "name": "AddressRestrictionUpdated",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+      { "indexed": false, "internalType": "bool", "name": "approved", "type": "bool" }
+    ],
+    "name": "ApprovalForAll",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "burner", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "balance", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "required", "type": "uint256" }
+    ],
+    "name": "BurnSkippedDueToInsufficientBalance",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "burner", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "BurnedForExchange",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "burner", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "BurnedForRetirement",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "recipient", "type": "address" }],
+    "name": "MintSkippedDueToRestrictedAddress",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "recipient", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "NFTMint",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
+    "name": "Paused",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": true, "internalType": "bytes32", "name": "previousAdminRole", "type": "bytes32" },
+      { "indexed": true, "internalType": "bytes32", "name": "newAdminRole", "type": "bytes32" }
+    ],
+    "name": "RoleAdminChanged",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "sender", "type": "address" }
+    ],
+    "name": "RoleGranted",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "sender", "type": "address" }
+    ],
+    "name": "RoleRevoked",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "from", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "to", "type": "address" },
+      { "indexed": false, "internalType": "uint256[]", "name": "ids", "type": "uint256[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "values", "type": "uint256[]" }
+    ],
+    "name": "TransferBatch",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "from", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "to", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" }
+    ],
+    "name": "TransferSingle",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "string", "name": "value", "type": "string" },
+      { "indexed": true, "internalType": "uint256", "name": "id", "type": "uint256" }
+    ],
+    "name": "URI",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
+    "name": "Unpaused",
+    "payable": false,
+    "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "MINT_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "id", "type": "uint256" }
+    ],
+    "name": "balanceOf",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address[]", "name": "accounts", "type": "address[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "ids", "type": "uint256[]" }
+    ],
+    "name": "balanceOfBatch",
+    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256[]", "name": "_ids", "type": "uint256[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "_amounts", "type": "uint256[]" }
+    ],
+    "name": "burnBatchForExchange",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256[]", "name": "_ids", "type": "uint256[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "_amounts", "type": "uint256[]" }
+    ],
+    "name": "burnBatchForRetirement",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "_id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "_amount", "type": "uint256" }
+    ],
+    "name": "burnForExchange",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "_id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "_amount", "type": "uint256" }
+    ],
+    "name": "burnForRetirement",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "bytes32", "name": "role", "type": "bytes32" }],
+    "name": "getRoleAdmin",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": false, "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": false, "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "hasRole",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "operator", "type": "address" }
+    ],
+    "name": "isApprovedForAll",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "_address", "type": "address" }],
+    "name": "isRestricted",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "_recipient", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "_id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "_amount", "type": "uint256" }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address[]", "name": "_recipients", "type": "address[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "_ids", "type": "uint256[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "_amounts", "type": "uint256[]" }
+    ],
+    "name": "mintBatch",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "pause",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "paused",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": false, "internalType": "address", "name": "callerConfirmation", "type": "address" }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "_address", "type": "address" }],
+    "name": "restrictAddress",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "indexed": false, "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "_from", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "_to", "type": "address" },
+      { "indexed": false, "internalType": "uint256[]", "name": "_ids", "type": "uint256[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "_values", "type": "uint256[]" },
+      { "indexed": false, "internalType": "bytes", "name": "_data", "type": "bytes" }
+    ],
+    "name": "safeBatchTransferFrom",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "_from", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "_to", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "_id", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "_data", "type": "bytes" }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "operator", "type": "address" },
+      { "indexed": false, "internalType": "bool", "name": "approved", "type": "bool" }
+    ],
+    "name": "setApprovalForAll",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }],
+    "name": "supportsInterface",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "totalBurned",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "totalMinted",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "unpause",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "_address", "type": "address" }],
+    "name": "unrestrictAddress",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "string", "name": "_newURI", "type": "string" }],
+    "name": "updateURI",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "uri",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

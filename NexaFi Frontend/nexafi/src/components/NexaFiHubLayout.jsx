@@ -1,13 +1,16 @@
-import React from 'react';
+import { useState } from 'react';
 import NexaFiHubNavbar from '../components/NexaFiHubNavbar';
 import { Outlet } from 'react-router-dom';
 
 const NexaFiHubLayout = () => {
+  const [walletAddress, setWalletAddress] = useState('');
+  const [status, setStatus] = useState('');
+
   return (
     <div>
-      <NexaFiHubNavbar />
+      <NexaFiHubNavbar walletAddress={walletAddress} setWalletAddress={setWalletAddress} setStatus={setStatus} />
 
-      <Outlet />
+      <Outlet context={{ walletAddress, status }} />
     </div>
   );
 };
