@@ -9,8 +9,8 @@ artifacts/
 cache/
 coverage/
 coverage.json
-ignition/deployments/chain-31337
 typechain-types/
+deployments/
 
 # Remix dependencies
 .deps
