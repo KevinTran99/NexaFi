@@ -1,7 +1,10 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
-import NexaFi from './pages/NexaFi';
-import NexaFiHub from './pages/NexaFiHub';
 import NotFound from './components/NotFound';
+import NexaFi from './pages/NexaFi';
+import NexaFiHubLayout from './components/NexaFiHubLayout';
+import NexaFiHub from './pages/NexaFiHub';
+import Dashboard from './pages/Dashboard';
+import Marketplace from './pages/Marketplace';
 
 const router = createBrowserRouter([
   {
@@ -15,7 +18,21 @@ const router = createBrowserRouter([
       },
       {
         path: '/nexafihub',
-        element: <NexaFiHub />,
+        element: <NexaFiHubLayout />,
+        children: [
+          {
+            index: true,
+            element: <NexaFiHub />,
+          },
+          {
+            path: 'dashboard',
+            element: <Dashboard />,
+          },
+          {
+            path: 'marketplace',
+            element: <Marketplace />,
+          },
+        ],
       },
     ],
   },

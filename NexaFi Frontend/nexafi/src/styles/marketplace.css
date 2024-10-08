@@ -1,0 +1,7 @@
+.marketplace {
+  height: 100vh;
+  width: 100dvw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
