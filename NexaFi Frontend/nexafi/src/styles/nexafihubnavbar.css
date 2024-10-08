@@ -4,3 +4,22 @@
   font-size: 1rem;
   cursor: pointer;
 }
+
+.wallet-button {
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  border: 2px solid white;
+  border-radius: 25px;
+  font-size: 1rem;
+  flex-shrink: 0;
+  text-align: center;
+  background-color: rgba(47, 79, 79, 0.98);
+  cursor: pointer;
+}
+
+.wallet-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
