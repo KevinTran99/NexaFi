@@ -3,30 +3,28 @@ import '../styles/nexafihubnavbar.css';
 import { Link } from 'react-router-dom';
 import { connectWallet, getConnectedWallet, walletListener } from '../utilities/WalletInteractions';
 
-const NexaFiHubNavbar = ({ walletAddress, setWalletAddress, setStatus }) => {
+const NexaFiHubNavbar = ({ walletAddress, setWalletAddress }) => {
   useEffect(() => {
     const initialize = async () => {
       try {
-        const { address, status } = await getConnectedWallet();
+        const { address } = await getConnectedWallet();
         setWalletAddress(address);
-        setStatus(status);
 
         if (address) {
-          walletListener(setWalletAddress, setStatus);
+          walletListener(setWalletAddress);
         }
       } catch (err) {
-        setStatus('Error loading data: ' + err.message);
+        console.error('Error loading wallet data: ', err.message);
       }
     };
 
     initialize();
-  }, [setWalletAddress, setStatus]);
+  }, [setWalletAddress]);
 
   const handleConnectWallet = async () => {
     const walletResponse = await connectWallet();
 
     setWalletAddress(walletResponse.address);
-    setStatus(walletResponse.status);
   };
 
   return (

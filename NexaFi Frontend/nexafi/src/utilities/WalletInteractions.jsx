@@ -7,27 +7,17 @@ export const connectWallet = async () => {
 
       return {
         address: addressArray[0],
-        status: '',
       };
     } catch (err) {
       return {
         address: '',
-        status: err.message,
+        error: err.message || 'An unknown error occurred.',
       };
     }
   } else {
     return {
       address: '',
-      status: (
-        <>
-          <h2>You don't have a digital wallet, please download one like MetaMask!</h2>
-          <p>
-            <a target="blank" href="https://metamask.io/download.html">
-              Install MetaMask for your browser here!
-            </a>
-          </p>
-        </>
-      ),
+      error: 'No digital wallet detected. Please install a wallet like MetaMask.',
     };
   }
 };
@@ -42,56 +32,28 @@ export const getConnectedWallet = async () => {
       if (accounts.length > 0) {
         return {
           address: accounts[0],
-          status: '',
         };
       } else {
         return {
           address: '',
-          status: (
-            <>
-              <h2>Not Connected</h2>
-              <p>Please connect your wallet using the top right button to view the dashboard.</p>
-            </>
-          ),
         };
       }
     } catch (err) {
       return {
         address: '',
-        status: err.message,
+        error: err.message || 'An unknown error occurred.',
       };
     }
-  } else {
-    return {
-      status: (
-        <>
-          <h2>You don't have a digital wallet, please download one like MetaMask!</h2>
-          <p>
-            <a target="blank" href="https://metamask.io/download.html">
-              Install MetaMask for your browser here!
-            </a>
-          </p>
-        </>
-      ),
-      address: '',
-    };
   }
 };
 
-export const walletListener = (setWalletAddress, setStatus) => {
+export const walletListener = setWalletAddress => {
   if (window.ethereum) {
     window.ethereum.on('accountsChanged', accounts => {
       if (accounts.length > 0) {
         setWalletAddress(accounts[0]);
-        setStatus('');
       } else {
         setWalletAddress('');
-        setStatus(
-          <>
-            <h2>Not Connected</h2>
-            <p>Please connect your wallet using the top right button to view the dashboard.</p>
-          </>
-        );
       }
     });
   }
