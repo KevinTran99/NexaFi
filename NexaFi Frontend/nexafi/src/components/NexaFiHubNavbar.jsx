@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import '../styles/nexafihubnavbar.css';
 import { Link } from 'react-router-dom';
-import { connectWallet, getConnectedWallet, walletListener } from '../utilities/ContractInteractions';
+import { connectWallet, getConnectedWallet, walletListener } from '../utilities/WalletInteractions';
 
 const NexaFiHubNavbar = ({ walletAddress, setWalletAddress, setStatus }) => {
   useEffect(() => {
