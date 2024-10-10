@@ -1,18 +1,100 @@
-.dashboard-section {
+.dashboard-main-header {
+  width: 100%;
+  height: 320px;
+  position: relative;
+}
+
+.dashboard-header-background {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+}
+
+.profile-container {
+  position: relative;
   max-width: 1400px;
+  height: 100%;
   margin: 0 auto;
-  padding-top: 90px;
-  padding-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 70px;
+  padding-left: 20px;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-image {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid white;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 .dashboard-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.not-connected {
+  text-align: center;
+  padding-top: 140px;
+}
+
+.dashboard-content-header {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+}
+
+.nft-empty {
+  text-align: center;
+  padding: 50px;
+}
+
+.empty-msg-title {
+  margin-bottom: 10px;
+}
+
+.nft-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
   justify-content: start;
 }
 
-.dashboard-item {
+.nft-card {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -21,29 +103,8 @@
   position: relative;
 }
 
-.dashboard-item:hover {
+.nft-card:hover {
   transform: translateY(-10px);
-}
-
-.dashboard-item img {
-  width: 100%;
-  height: 300px;
-}
-
-.dashboard-item h3 {
-  font-size: 1.1rem;
-  margin: 5px 10px 0px 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dashboard-item p {
-  font-size: 0.9rem;
-  margin: 5px 10px 10px 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .nft-balance {
@@ -57,38 +118,23 @@
   font-weight: 500;
 }
 
-.nft-empty {
-  text-align: center;
-  padding: 50px;
+.nft-card-img {
+  width: 100%;
+  height: 300px;
 }
 
-.nft-empty h2 {
-  margin-bottom: 10px;
+.nft-card-title {
+  font-size: 1.1rem;
+  margin: 5px 10px 0px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.not-connected {
-  text-align: center;
-  padding-top: 140px;
-}
-
-.dashboard-header {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  background-color: #f0f0f0;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.stat-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 5px;
-}
-
-.stat-card p {
-  font-size: 0.8rem;
+.nft-card-description {
+  font-size: 0.9rem;
+  margin: 5px 10px 10px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

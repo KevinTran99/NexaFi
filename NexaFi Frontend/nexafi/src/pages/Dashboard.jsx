@@ -33,25 +33,39 @@ const Dashboard = () => {
 
   return (
     <main className="dashboard-main">
-      {!walletAddress && <section className="dashboard-section not-connected">{status}</section>}
+      <header className="dashboard-main-header">
+        <img src={'/jungle.png'} alt="Lush green jungle forest" className="dashboard-header-background" />
+
+        <div className="profile-container">
+          <div className="profile-content">
+            <img src={'/earth-icon.png'} alt="icon of a globe" className="profile-image" />
+            <p className="profile-name">
+              {walletAddress &&
+                ` ${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`}
+            </p>{' '}
+          </div>
+        </div>
+      </header>
+
+      {!walletAddress && <section className="dashboard-content not-connected">{status}</section>}
 
       {walletAddress && walletAddress.length > 0 && (
-        <section className="dashboard-section wallet-connected">
-          <header className="dashboard-header">
+        <section className="dashboard-content">
+          <header className="dashboard-content-header">
             <div className="stat-card">
-              <h3>{nfts.reduce((acc, nft) => acc + parseInt(nft.balance, 10), 0)}</h3>
-              <p>Total NFTs Owned</p>
+              <h3 className="stat-value">{nfts.reduce((acc, nft) => acc + parseInt(nft.balance, 10), 0)}</h3>
+              <p className="stat-label">Total NFTs Owned</p>
             </div>
 
             <div className="stat-card">
-              <h3>{nfts.length}</h3>
-              <p>Total Unique NFTs</p>
+              <h3 className="stat-value">{nfts.length}</h3>
+              <p className="stat-label"> Total Unique NFTs</p>
             </div>
           </header>
 
           {nfts.length === 0 && (
             <section className="nft-empty">
-              <h2>No Environmental NFTs found in your wallet.</h2>
+              <h2 className="empty-msg-title">No Environmental NFTs found in your wallet.</h2>
               <p>
                 It looks like you don't have any environmental NFTs yet. Start exploring the marketplaces to begin your
                 collection.
@@ -59,16 +73,18 @@ const Dashboard = () => {
             </section>
           )}
 
-          <section className="dashboard-content">
+          <section className="nft-grid">
             {nfts.length > 0 &&
               nfts.map(nft => (
-                <article key={nft.id} className="dashboard-item">
+                <article key={nft.id} className="nft-card">
                   {nft.balance > 1 && <span className="nft-balance">{nft.balance}</span>}
 
-                  <img src={nft.metadata.image} alt={nft.metadata.description} />
-                  <h3>{nft.metadata.name}</h3>
+                  <img src={nft.metadata.image} alt={nft.metadata.description} className="nft-card-img" />
 
-                  <p>Emission Allowance: {nft.metadata.attributes[0].value.replace('CO2', 'CO₂')}</p>
+                  <h3 className="nft-card-title">{nft.metadata.name}</h3>
+                  <p className="nft-card-description">
+                    Emission Allowance: {nft.metadata.attributes[0].value.replace('CO2', 'CO₂')}
+                  </p>
                 </article>
               ))}
           </section>
