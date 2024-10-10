@@ -37,6 +37,18 @@ const Dashboard = () => {
 
       {walletAddress && walletAddress.length > 0 && (
         <section className="dashboard-section wallet-connected">
+          <header className="dashboard-header">
+            <div className="stat-card">
+              <h3>{nfts.reduce((acc, nft) => acc + parseInt(nft.balance, 10), 0)}</h3>
+              <p>Total NFTs Owned</p>
+            </div>
+
+            <div className="stat-card">
+              <h3>{nfts.length}</h3>
+              <p>Total Unique NFTs</p>
+            </div>
+          </header>
+
           {nfts.length === 0 && (
             <section className="nft-empty">
               <h2>No Environmental NFTs found in your wallet.</h2>
@@ -47,17 +59,19 @@ const Dashboard = () => {
             </section>
           )}
 
-          <div className="dashboard-content">
+          <section className="dashboard-content">
             {nfts.length > 0 &&
               nfts.map(nft => (
-                <section key={nft.id} className="dashboard-item">
+                <article key={nft.id} className="dashboard-item">
                   {nft.balance > 1 && <span className="nft-balance">{nft.balance}</span>}
+
                   <img src={nft.metadata.image} alt={nft.metadata.description} />
                   <h3>{nft.metadata.name}</h3>
-                  <p>Emission Allowance: {nft.metadata.attributes[0].value}</p>
-                </section>
+
+                  <p>Emission Allowance: {nft.metadata.attributes[0].value.replace('CO2', 'CO₂')}</p>
+                </article>
               ))}
-          </div>
+          </section>
         </section>
       )}
     </main>
