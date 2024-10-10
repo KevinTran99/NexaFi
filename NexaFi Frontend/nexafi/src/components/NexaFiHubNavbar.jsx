@@ -59,7 +59,7 @@ const NexaFiHubNavbar = ({ walletAddress, setWalletAddress }) => {
         )}
 
         {walletAddress && walletAddress.length > 0 && (
-          <p className="walletAddress">
+          <p className="wallet-address">
             Connected:
             {` ${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`}
           </p>
