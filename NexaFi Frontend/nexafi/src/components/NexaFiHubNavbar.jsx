@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import '../styles/nexafihubnavbar.css';
+import '../styles/nexafi-hub-navbar.css';
 import { Link } from 'react-router-dom';
 import { connectWallet, getConnectedWallet, walletListener } from '../utilities/WalletInteractions';
 

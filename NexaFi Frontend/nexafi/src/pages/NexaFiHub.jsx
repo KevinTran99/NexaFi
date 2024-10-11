@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/nexafihub.css';
+import '../styles/nexafi-hub.css';
 
 const NexaFiHub = () => {
   return (
