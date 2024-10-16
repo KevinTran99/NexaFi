@@ -1,7 +1,8 @@
 {
   "name": "EUA Token",
   "description": "This NFT represents a European Union Emission Allowance.",
-  "image": "https://bafkreicgxvpkkuretuiru2wpy234vlefb22kvd4fqx2vlxfaosfeykwavi.ipfs.flk-ipfs.xyz",
+  "image": "https://bafkreidmmtqkde6s5ialuxpb3alxlafwcgzxpdnp7tzj4erc65aeanhjya.ipfs.flk-ipfs.xyz",
+  "animation_url": "https://bafybeiem3q4hxdqetqhgcjx7dlxj5gasrusawsv225owmyaubjmptcfhxm.ipfs.flk-ipfs.xyz",
   "attributes": [
     {
       "trait_type": "Emission Allowance",

@@ -1,7 +1,8 @@
 {
   "name": "EUAA Token",
   "description": "This NFT represents a European Union Aviation Allowance.",
-  "image": "https://bafkreifutlsqd7jbdufyma5kzb7wobxpubksssbybabfiqo2rk3byfivfm.ipfs.flk-ipfs.xyz",
+  "image": "https://bafkreif5rn3yav26vufrs5flqvhrsor2lypcfnzargsc46ut2dgkwdfxki.ipfs.flk-ipfs.xyz",
+  "animation_url": "https://bafybeidh6dnzmwgdto6dtw54n6cztervcrx6v7r33zsxkggewu23tbyrhi.ipfs.flk-ipfs.xyz",
   "attributes": [
     {
       "trait_type": "Aviation Allowance",
