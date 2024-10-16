@@ -1,10 +1,10 @@
 import React from 'react';
-import '../styles/nexafi-hub.css';
+import HubHero from '../components/HubHero';
 
 const NexaFiHub = () => {
   return (
     <div>
-      <h1 className="nexafihub">Welcome to the NexaFi Hub</h1>
+      <HubHero />
     </div>
   );
 };

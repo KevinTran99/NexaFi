@@ -1,0 +1,107 @@
+.hub-hero-main {
+  position: relative;
+  margin-top: 70px;
+  background-size: cover;
+  background-position: center;
+  height: 650px;
+  display: flex;
+  justify-content: center;
+}
+
+.hub-hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: -1000;
+  filter: blur(4px);
+}
+
+.hub-hero-content-container {
+  width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 200px;
+}
+
+.hub-hero-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.hub-hero-description {
+  font-size: 1.2rem;
+  margin-bottom: 2.8rem;
+  color: white;
+}
+
+.hub-hero-cta {
+  padding: 0.8rem 2rem;
+  background-color: #dc143c;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.hub-hero-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2.8rem;
+}
+
+.hub-hero-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.hub-hero-stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.hub-hero-stat-label {
+  font-size: 1rem;
+  color: white;
+}
+
+.hub-nft-card {
+  min-width: 280px;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.hub-nft-card-img {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+}
+
+.hub-nft-card-title {
+  font-size: 1.1rem;
+  margin: 5px 10px 0px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hub-nft-card-description {
+  font-size: 0.9rem;
+  margin: 5px 10px 10px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hub-nfts-empty {
+  color: black;
+}
