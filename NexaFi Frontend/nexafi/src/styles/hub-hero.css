@@ -1,19 +1,21 @@
 .hub-hero-main {
   position: relative;
   margin-top: 70px;
+  padding-bottom: 35px;
   background-size: cover;
   background-position: center;
   height: 650px;
   display: flex;
   justify-content: center;
+  overflow: hidden;
 }
 
 .hub-hero-background {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -5px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
   background-size: cover;
   background-position: center;
   z-index: -1000;
