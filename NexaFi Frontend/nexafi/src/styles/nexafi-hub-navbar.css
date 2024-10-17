@@ -1,3 +1,48 @@
+.hub-nav-section {
+  position: absolute;
+  top: 0;
+  height: 80px;
+  width: 100%;
+  background-color: transparent;
+  z-index: 1000;
+}
+
+.hub-nav-content {
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hub-brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-nav-logo {
+  height: 40px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.7));
+}
+
+.hub-brand-name {
+  color: white;
+  flex-shrink: 0;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
+  font-size: 1.7rem;
+}
+
+.hub-nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .hub-nav-item {
   color: white;
   text-decoration: none;
@@ -6,18 +51,23 @@
   text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.7);
 }
 
+.hub-nav-item:hover {
+  text-decoration: underline;
+}
+
 .wallet-button {
   padding: 12px;
   color: white;
   text-decoration: none;
   border: 2px solid white;
+  background-color: transparent;
   border-radius: 25px;
   font-size: 1.1rem;
   flex-shrink: 0;
   text-align: center;
-  background-color: rgba(47, 79, 79, 0.98);
   cursor: pointer;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
 }
 
 .wallet-button:hover {
@@ -32,6 +82,7 @@
   padding: 12px;
   font-size: 1.1rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
 }
 
 .wallet-address:hover {

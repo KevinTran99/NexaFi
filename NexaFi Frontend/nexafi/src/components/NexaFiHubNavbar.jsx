@@ -28,14 +28,14 @@ const NexaFiHubNavbar = ({ walletAddress, setWalletAddress }) => {
   };
 
   return (
-    <nav className="nav-section">
-      <div className="nav-content">
-        <div className="brand-wrapper">
-          <img src="brand-logo.png" alt="" className="nav-logo" />
-          <h3>NexaFi Hub</h3>
+    <nav className="hub-nav-section">
+      <div className="hub-nav-content">
+        <div className="hub-brand-wrapper">
+          <img src="brand-logo.png" alt="" className="hub-nav-logo" />
+          <h3 className="hub-brand-name">NexaFi Hub</h3>
         </div>
 
-        <ul className="nav-links">
+        <ul className="hub-nav-links">
           <li>
             <Link to={'/nexafihub'} className="hub-nav-item">
               Home
