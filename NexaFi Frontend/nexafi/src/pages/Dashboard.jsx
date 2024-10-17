@@ -34,11 +34,9 @@ const Dashboard = () => {
   return (
     <main className="dashboard-main">
       <header className="dashboard-main-header">
-        <img src={'/jungle.png'} alt="Lush green jungle forest" className="dashboard-header-background" />
-
         <div className="profile-container">
           <div className="profile-content">
-            <img src={'/earth-icon.png'} alt="icon of a globe" className="profile-image" />
+            <img src={'/avatar.jpg'} alt="icon of a globe" className="profile-image" />
             <p className="profile-name">
               {walletAddress &&
                 ` ${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`}

@@ -2,13 +2,7 @@
   width: 100%;
   height: 320px;
   position: relative;
-}
-
-.dashboard-header-background {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
+  background: linear-gradient(135deg, #2f4f4f 10%, #3b802a);
 }
 
 .profile-container {
