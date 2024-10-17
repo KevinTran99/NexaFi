@@ -10,7 +10,7 @@ const Home = () => {
         </video>
         <header className="overlay-text">
           <h1>Welcome to NexaFi</h1>
-          <p className="tagline">The nexus for tokenizing real assets</p>
+          <p className="tagline">The nexus for tokenizing environmental assets</p>
         </header>
       </div>
     </section>
