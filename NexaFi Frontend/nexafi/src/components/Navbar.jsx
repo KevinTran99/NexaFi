@@ -6,7 +6,10 @@ const Navbar = () => {
   return (
     <nav className="nav-section">
       <div className="nav-content">
-        <h3>NexaFi</h3>
+        <div className="brand-wrapper">
+          <img src="brand-logo.png" alt="" className="nav-logo" />
+          <h3>NexaFi</h3>
+        </div>
 
         <ul className="nav-links">
           <li className="nav-item">
