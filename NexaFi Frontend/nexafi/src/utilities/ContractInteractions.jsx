@@ -1,31 +1,30 @@
+import { ethers } from 'ethers';
+
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
-const { createAlchemyWeb3 } = require('@alch/alchemy-web3');
-const web3 = createAlchemyWeb3(alchemyKey);
+const provider = new ethers.WebSocketProvider(`wss://polygon-amoy.g.alchemy.com/v2/${alchemyKey}`);
 
 const contractABI = require('../contract-abi.json');
 const contractAddress = process.env.REACT_APP_CONTRACT;
-
-const tokenRegistryContract = new web3.eth.Contract(contractABI, contractAddress);
 
 export const fetchNFTs = async walletAddress => {
   if (window.ethereum) {
     try {
       const nfts = [];
       const currentTokenIds = 2;
-
       const tokenIds = Array.from({ length: currentTokenIds }, (_, index) => index + 1);
-      const balances = await tokenRegistryContract.methods
-        .balanceOfBatch(Array(tokenIds.length).fill(walletAddress), tokenIds)
-        .call();
+
+      const tokenRegistryContract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      const balances = await tokenRegistryContract.balanceOfBatch(Array(tokenIds.length).fill(walletAddress), tokenIds);
 
       for (let i = 0; i < tokenIds.length; i++) {
-        const balance = balances[i];
-
-        const uri = await tokenRegistryContract.methods.uri(tokenIds[i]).call();
-        const response = await fetch(uri.replace('{id}', tokenIds[i]));
-        const metadata = await response.json();
+        const balance = Number(balances[i]);
 
         if (balance > 0) {
+          const uri = await tokenRegistryContract.uri(tokenIds[i]);
+          const response = await fetch(uri.replace('{id}', tokenIds[i]));
+          const metadata = await response.json();
+
           nfts.push({
             id: tokenIds[i],
             balance: balance,
@@ -36,6 +35,7 @@ export const fetchNFTs = async walletAddress => {
 
       return nfts;
     } catch (err) {
+      console.error('Error fetching NFTs:', err);
       return [];
     }
   }
