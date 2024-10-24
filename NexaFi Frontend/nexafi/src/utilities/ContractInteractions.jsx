@@ -65,3 +65,30 @@ export const burnForRetirement = async (tokenId, amount) => {
     throw new Error(err.message || 'Failed to burn NFT');
   }
 };
+
+export const burnForExchange = async (tokenId, amount) => {
+  if (!window.ethereum) {
+    console.error('Ethereum wallet is not connected');
+    return;
+  }
+
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+
+    const tokenRegistryContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+    const tx = await tokenRegistryContract.burnForExchange(tokenId, amount);
+
+    const receipt = await tx.wait();
+
+    return {
+      success: true,
+      transaction: tx,
+      receipt: receipt,
+    };
+  } catch (err) {
+    console.error('Error burning NFT:', err);
+    throw new Error(err.message || 'Failed to burn NFT');
+  }
+};
