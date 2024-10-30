@@ -4,6 +4,7 @@ import NexaFi from './pages/NexaFi';
 import NexaFiHubLayout from './components/NexaFiHubLayout';
 import NexaFiHub from './pages/NexaFiHub';
 import Dashboard from './pages/Dashboard';
+import Burn from './pages/Burn';
 import Marketplace from './pages/Marketplace';
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
           {
             path: 'dashboard',
             element: <Dashboard />,
+          },
+          {
+            path: 'burn',
+            element: <Burn />,
           },
           {
             path: 'marketplace',
