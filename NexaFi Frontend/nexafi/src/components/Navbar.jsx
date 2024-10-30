@@ -36,7 +36,7 @@ const Navbar = () => {
     <nav className={`nav-section ${scrolled ? 'scrolled' : ''} ${hidden ? 'hidden' : ''}`}>
       <div className="nav-content">
         <div className="brand-wrapper">
-          <img src="brand-logo.png" alt="" className="nav-logo" />
+          <img src="/brand-logo.png" alt="NexaFi Logo" className="nav-logo" />
           <h3 className="brand-name">NexaFi</h3>
         </div>
 

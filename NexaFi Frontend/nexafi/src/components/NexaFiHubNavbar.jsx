@@ -31,7 +31,7 @@ const NexaFiHubNavbar = ({ walletAddress, setWalletAddress }) => {
     <nav className="hub-nav-section">
       <div className="hub-nav-content">
         <div className="hub-brand-wrapper">
-          <img src="brand-logo.png" alt="" className="hub-nav-logo" />
+          <img src="/brand-logo.png" alt="NexaFi Logo" className="hub-nav-logo" />
           <h3 className="hub-brand-name">NexaFi Hub</h3>
         </div>
 
