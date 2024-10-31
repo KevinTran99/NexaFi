@@ -41,7 +41,7 @@ export const fetchNFTs = async walletAddress => {
 
 export const burnForRetirement = async (tokenId, amount) => {
   if (!window.ethereum) {
-    console.error('Ethereum wallet is not connected');
+    console.error('Wallet is not connected');
     return;
   }
 
@@ -68,7 +68,7 @@ export const burnForRetirement = async (tokenId, amount) => {
 
 export const burnForExchange = async (tokenId, amount) => {
   if (!window.ethereum) {
-    console.error('Ethereum wallet is not connected');
+    console.error('Wallet is not connected');
     return;
   }
 
@@ -90,5 +90,32 @@ export const burnForExchange = async (tokenId, amount) => {
   } catch (err) {
     console.error('Error burning NFT:', err);
     throw new Error(err.message || 'Failed to burn NFT');
+  }
+};
+
+export const mint = async (tokenId, amount) => {
+  if (!window.ethereum) {
+    console.error('Wallet is not connected');
+    return;
+  }
+
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+
+    const tokenRegistryContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+    const tx = await tokenRegistryContract.mint(await signer.getAddress(), tokenId, amount);
+
+    const receipt = await tx.wait();
+
+    return {
+      sucess: true,
+      transaction: tx,
+      receipt: receipt,
+    };
+  } catch (err) {
+    console.error('Error minting NFT:', err);
+    throw new Error(err.message || 'Failed to mint NFT');
   }
 };
