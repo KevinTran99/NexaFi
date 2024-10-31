@@ -58,10 +58,11 @@ const Burn = () => {
       burnForExchange(selectedNFT.id, parsedAmount);
     }
 
+    setCurrentStep(1);
+    setCurrentCard(0);
     setSelectedNFT(null);
     setSelectedOption(null);
-    setAmount('');
-    setCurrentStep(1);
+    setAmount(0);
   };
 
   return (
