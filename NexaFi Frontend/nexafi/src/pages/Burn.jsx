@@ -247,7 +247,7 @@ const Burn = () => {
           <>
             <section className="burn-form">
               <header className="burn-form-header">
-                <h3 className="burn-form-header-title">Summary</h3>
+                <h2 className="burn-form-header-title">Summary</h2>
               </header>
 
               <div className="burn-form-summary">
