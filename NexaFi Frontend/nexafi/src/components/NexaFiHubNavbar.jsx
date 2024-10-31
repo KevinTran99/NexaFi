@@ -49,6 +49,12 @@ const NexaFiHubNavbar = ({ walletAddress, setWalletAddress }) => {
           </li>
 
           <li>
+            <Link to={'/nexafihub/mint'} className="hub-nav-item">
+              Mint
+            </Link>
+          </li>
+
+          <li>
             <Link to={'/nexafihub/burn'} className="hub-nav-item">
               Burn
             </Link>
