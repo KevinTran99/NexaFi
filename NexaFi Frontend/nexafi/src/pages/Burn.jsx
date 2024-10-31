@@ -176,7 +176,6 @@ const Burn = () => {
                   className={`burn-form-options-card ${selectedOption === 'Retire' ? 'selected' : ''}`}
                   onClick={() => {
                     setSelectedOption('Retire');
-                    setAmount('');
                   }}
                 >
                   <h3>Burn for Retirement</h3>
@@ -186,7 +185,6 @@ const Burn = () => {
                   className={`burn-form-options-card ${selectedOption === 'Redeem' ? 'selected' : ''}`}
                   onClick={() => {
                     setSelectedOption('Redeem');
-                    setAmount('');
                   }}
                 >
                   <h3>Burn to redeem credits</h3>
