@@ -394,6 +394,16 @@ contract Marketplace is ReentrancyGuard, ERC1155Holder{
     }
 
     /**
+     * @notice Returns all orders currently active in the marketplace
+     * @dev Used to efficiently fetch the entire orderbook state in a single call.
+     * Includes both buy and sell orders that haven't been fully filled or cancelled.
+     * @return Order[] Array containing all active orders with their current state
+     */
+    function getActiveOrders() public view returns (Order[] memory) {
+        return activeOrders;
+    }
+
+    /**
      * @notice Cancels an existing order and returns tokens to the maker
      * @dev Only the maker of the order can cancel it.
      * Reverts if:
