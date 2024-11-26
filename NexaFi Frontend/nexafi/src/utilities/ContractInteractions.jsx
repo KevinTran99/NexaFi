@@ -1,9 +1,9 @@
 import { ethers } from 'ethers';
 
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
-const provider = new ethers.WebSocketProvider(`wss://polygon-amoy.g.alchemy.com/v2/${alchemyKey}`);
+const provider = new ethers.WebSocketProvider(`wss://eth-sepolia.g.alchemy.com/v2/${alchemyKey}`);
 
-const contractABI = require('../contract-abi.json');
+const contractABI = require('../token-registry-abi.json');
 const contractAddress = process.env.REACT_APP_CONTRACT;
 
 export const fetchNFTs = async walletAddress => {
