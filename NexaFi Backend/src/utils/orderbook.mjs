@@ -23,6 +23,7 @@ class Orderbook {
 
     orderList.sort((a, b) => {
       const priceDiff = BigInt(b.price) - BigInt(a.price);
+
       return order.isBuyOrder ? Number(priceDiff) : -Number(priceDiff);
     });
 
@@ -38,7 +39,7 @@ class Orderbook {
     const orders = this.ordersByToken.get(tokenId);
     if (!orders) return { bids: [], asks: [] };
 
-    const aggregateOrders = orderList => {
+    const aggregateOrders = (orderList, isBids) => {
       const priceMap = new Map();
 
       orderList.forEach(order => {
@@ -50,12 +51,15 @@ class Orderbook {
 
       return Array.from(priceMap.entries())
         .map(([price, size]) => ({ price, size: size.toString() }))
-        .sort((a, b) => Number(BigInt(b.price) - BigInt(a.price)));
+        .sort((a, b) => {
+          const priceDiff = BigInt(b.price) - BigInt(a.price);
+          return isBids ? Number(priceDiff) : -Number(priceDiff);
+        });
     };
 
     return {
-      bids: aggregateOrders(orders.bids),
-      asks: aggregateOrders(orders.asks),
+      bids: aggregateOrders(orders.bids, true),
+      asks: aggregateOrders(orders.asks, false),
     };
   }
 }
