@@ -33,6 +33,31 @@ class Orderbook {
       size: order.amount,
     };
   }
+
+  getOrderbookByTokenId(tokenId) {
+    const orders = this.ordersByToken.get(tokenId);
+    if (!orders) return { bids: [], asks: [] };
+
+    const aggregateOrders = orderList => {
+      const priceMap = new Map();
+
+      orderList.forEach(order => {
+        const available = BigInt(order.amount) - BigInt(order.filled);
+        if (available > 0n) {
+          priceMap.set(order.price, (priceMap.get(order.price) || 0n) + available);
+        }
+      });
+
+      return Array.from(priceMap.entries())
+        .map(([price, size]) => ({ price, size: size.toString() }))
+        .sort((a, b) => Number(BigInt(b.price) - BigInt(a.price)));
+    };
+
+    return {
+      bids: aggregateOrders(orders.bids),
+      asks: aggregateOrders(orders.asks),
+    };
+  }
 }
 
 export default Orderbook;
