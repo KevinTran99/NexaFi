@@ -17,10 +17,24 @@ app.get('/health', (_, res) =>
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() })
 );
 
+const handleBlockchainEvents = {
+  onOrderCreated: order => {
+    console.log('Order created:', order);
+    orderbook.addOrder(order);
+  },
+  onOrderFilled: update => {
+    console.log('Order filled:', update);
+  },
+  onOrderCancelled: update => {
+    console.log('Order cancelled:', update);
+  },
+};
+
 const initialize = async () => {
   try {
     const activeOrders = await blockchainService.initialize();
     orderbook.processOrders(activeOrders);
+    blockchainService.listenToEvents(handleBlockchainEvents);
   } catch (error) {
     console.error('Initialization error:', error);
   }

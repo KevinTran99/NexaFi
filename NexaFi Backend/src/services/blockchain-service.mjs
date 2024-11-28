@@ -34,4 +34,46 @@ export default class BlockchainService {
       timestamp: Math.floor(Date.now() / 1000).toString(),
     }));
   }
+
+  listenToEvents({ onOrderCreated, onOrderFilled, onOrderCancelled }) {
+    this.marketplaceContract.on(
+      'OrderCreated',
+      (orderId, maker, tokenId, isBuyOrder, price, amount, timestamp) => {
+        onOrderCreated({
+          orderId: orderId.toString(),
+          maker,
+          tokenId: tokenId.toString(),
+          isBuyOrder,
+          price: price.toString(),
+          amount: amount.toString(),
+          filled: '0',
+          timestamp: timestamp.toString(),
+        });
+      }
+    );
+
+    this.marketplaceContract.on(
+      'OrderFilled',
+      (orderId, maker, taker, tokenId, isBuyOrder, price, amount, timestamp) => {
+        onOrderFilled({
+          orderId: orderId.toString(),
+          maker,
+          taker,
+          tokenId: tokenId.toString(),
+          isBuyOrder,
+          price: price.toString(),
+          amount: amount.toString(),
+          timestamp: timestamp.toString(),
+        });
+      }
+    );
+
+    this.marketplaceContract.on('OrderCancelled', (orderId, maker, timestamp) => {
+      onOrderCancelled({
+        orderId: orderId.toString(),
+        maker,
+        timestamp: timestamp.toString(),
+      });
+    });
+  }
 }
