@@ -124,6 +124,46 @@ class Orderbook {
       : null;
   }
 
+  findMarketSellMatches(tokenId, amount, minPrice) {
+    const orders = this.ordersByToken.get(tokenId);
+    if (!orders?.bids?.length) return null;
+
+    let remainingAmount = BigInt(amount);
+    const matches = {
+      orderIds: [],
+      amounts: [],
+      totalUsdt: 0n,
+      totalNfts: 0n,
+    };
+
+    for (const bid of orders.bids) {
+      if (remainingAmount <= 0n) break;
+
+      const bidPrice = BigInt(bid.price);
+      if (bidPrice < BigInt(minPrice)) continue;
+
+      const availableAmount = BigInt(bid.amount) - BigInt(bid.filled);
+      if (availableAmount <= 0n) continue;
+
+      const fillAmount = remainingAmount > availableAmount ? availableAmount : remainingAmount;
+
+      matches.orderIds.push(bid.orderId);
+      matches.amounts.push(fillAmount.toString());
+      matches.totalUsdt += fillAmount * bidPrice;
+      matches.totalNfts += fillAmount;
+      remainingAmount -= fillAmount;
+    }
+
+    return matches.orderIds.length > 0
+      ? {
+          orderIds: matches.orderIds,
+          amounts: matches.amounts,
+          totalUsdt: matches.totalUsdt.toString(),
+          totalNfts: matches.totalNfts.toString(),
+        }
+      : null;
+  }
+
   getPriceLevelSize(tokenId, price, isBuyOrder) {
     const orders = this.ordersByToken.get(tokenId);
     if (!orders) return '0';
