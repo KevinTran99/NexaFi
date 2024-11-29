@@ -65,6 +65,28 @@ class Orderbook {
     };
   }
 
+  removeOrder(orderId) {
+    const order = this.orderMap.get(orderId);
+    if (!order) return null;
+
+    const orders = this.ordersByToken.get(order.tokenId);
+    const orderList = order.isBuyOrder ? orders.bids : orders.asks;
+    const index = orderList.findIndex(o => o.orderId === orderId);
+
+    if (index !== -1) {
+      orderList.splice(index, 1);
+      this.orderMap.delete(orderId);
+
+      return {
+        tokenId: order.tokenId,
+        side: order.isBuyOrder ? 'bids' : 'asks',
+        price: order.price,
+        size: this.getPriceLevelSize(order.tokenId, order.price, order.isBuyOrder),
+      };
+    }
+    return null;
+  }
+
   getPriceLevelSize(tokenId, price, isBuyOrder) {
     const orders = this.ordersByToken.get(tokenId);
     if (!orders) return '0';

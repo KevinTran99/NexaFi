@@ -28,6 +28,7 @@ const handleBlockchainEvents = {
   },
   onOrderCancelled: update => {
     console.log('Order cancelled:', update);
+    orderbook.removeOrder(update.orderId);
   },
 };
 
