@@ -87,6 +87,43 @@ class Orderbook {
     return null;
   }
 
+  findMarketBuyMatches(tokenId, amount, maxPrice) {
+    const orders = this.ordersByToken.get(tokenId);
+    if (!orders?.asks?.length) return null;
+
+    let remainingAmount = BigInt(amount);
+    const matches = {
+      orderIds: [],
+      amounts: [],
+      totalUsdt: 0n,
+    };
+
+    for (const ask of orders.asks) {
+      if (remainingAmount <= 0n) break;
+
+      const askPrice = BigInt(ask.price);
+      if (askPrice > BigInt(maxPrice)) continue;
+
+      const availableAmount = BigInt(ask.amount) - BigInt(ask.filled);
+      if (availableAmount <= 0n) continue;
+
+      const fillAmount = remainingAmount > availableAmount ? availableAmount : remainingAmount;
+
+      matches.orderIds.push(ask.orderId);
+      matches.amounts.push(fillAmount.toString());
+      matches.totalUsdt += fillAmount * askPrice;
+      remainingAmount -= fillAmount;
+    }
+
+    return matches.orderIds.length > 0
+      ? {
+          orderIds: matches.orderIds,
+          amounts: matches.amounts,
+          totalUsdt: matches.totalUsdt.toString(),
+        }
+      : null;
+  }
+
   getPriceLevelSize(tokenId, price, isBuyOrder) {
     const orders = this.ordersByToken.get(tokenId);
     if (!orders) return '0';
