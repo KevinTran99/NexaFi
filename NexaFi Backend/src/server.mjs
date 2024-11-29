@@ -24,6 +24,7 @@ const handleBlockchainEvents = {
   },
   onOrderFilled: update => {
     console.log('Order filled:', update);
+    orderbook.updateOrderFill(update);
   },
   onOrderCancelled: update => {
     console.log('Order cancelled:', update);

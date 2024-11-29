@@ -35,6 +35,50 @@ class Orderbook {
     };
   }
 
+  updateOrderFill(update) {
+    const order = this.orderMap.get(update.orderId);
+    if (!order) return null;
+
+    const previousFilled = BigInt(order.filled);
+    const fillAmount = BigInt(update.amount);
+    const newFilled = previousFilled + fillAmount;
+
+    if (newFilled > BigInt(order.amount)) return null;
+
+    order.filled = newFilled.toString();
+
+    if (newFilled === BigInt(order.amount)) {
+      const orders = this.ordersByToken.get(order.tokenId);
+      if (orders) {
+        const orderList = order.isBuyOrder ? orders.bids : orders.asks;
+        const index = orderList.findIndex(o => o.orderId === update.orderId);
+        if (index !== -1) orderList.splice(index, 1);
+      }
+      this.orderMap.delete(update.orderId);
+    }
+
+    return {
+      tokenId: order.tokenId,
+      side: order.isBuyOrder ? 'bids' : 'asks',
+      price: order.price,
+      size: this.getPriceLevelSize(order.tokenId, order.price, order.isBuyOrder),
+    };
+  }
+
+  getPriceLevelSize(tokenId, price, isBuyOrder) {
+    const orders = this.ordersByToken.get(tokenId);
+    if (!orders) return '0';
+
+    const orderList = isBuyOrder ? orders.bids : orders.asks;
+    return orderList
+      .filter(o => o.price === price)
+      .reduce((total, o) => {
+        let available = BigInt(o.amount) - BigInt(o.filled);
+        return total + available;
+      }, 0n)
+      .toString();
+  }
+
   getOrderbookByTokenId(tokenId) {
     const orders = this.ordersByToken.get(tokenId);
     if (!orders) return { bids: [], asks: [] };
