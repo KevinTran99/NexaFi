@@ -40,6 +40,14 @@ class Orderbook {
     const order = this.orderMap.get(update.orderId);
     if (!order) return null;
 
+    const reservation = this.reservations.get(update.orderId);
+    if (reservation) {
+      reservation.totalReserved -= BigInt(update.amount);
+      if (reservation.totalReserved <= 0n) {
+        this.reservations.delete(update.orderId);
+      }
+    }
+
     const previousFilled = BigInt(order.filled);
     const fillAmount = BigInt(update.amount);
     const newFilled = previousFilled + fillAmount;
@@ -230,7 +238,8 @@ class Orderbook {
     return orderList
       .filter(o => o.price === price)
       .reduce((total, o) => {
-        let available = BigInt(o.amount) - BigInt(o.filled);
+        const reservation = this.reservations.get(o.orderId) || { totalReserved: 0n };
+        let available = BigInt(o.amount) - BigInt(o.filled) - reservation.totalReserved;
         return total + available;
       }, 0n)
       .toString();
