@@ -1,12 +1,14 @@
+import http from 'http';
 import express from 'express';
 import cors from 'cors';
-import http from 'http';
+import { WebSocketServer } from 'ws';
 import { config } from './config/config.mjs';
 import orderbookRouter from './routes/orderbook-routes.mjs';
 import { orderbook, blockchainService } from './startup.mjs';
 
 const app = express();
 const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
 
 app.use(cors());
 app.use(express.json());
@@ -16,6 +18,18 @@ app.use('/api/v1/orderbook', orderbookRouter);
 app.get('/health', (_, res) =>
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() })
 );
+
+wss.on('connection', ws => {
+  console.log('Client connected');
+
+  ws.on('error', error => {
+    console.error('WebSocket error:', error);
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
 
 const handleBlockchainEvents = {
   onOrderCreated: order => {
