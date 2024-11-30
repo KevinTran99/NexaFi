@@ -78,6 +78,8 @@ class Orderbook {
     const order = this.orderMap.get(orderId);
     if (!order) return null;
 
+    this.reservations.delete(orderId);
+
     const orders = this.ordersByToken.get(order.tokenId);
     const orderList = order.isBuyOrder ? orders.bids : orders.asks;
     const index = orderList.findIndex(o => o.orderId === orderId);
