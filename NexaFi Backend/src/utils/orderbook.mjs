@@ -253,7 +253,9 @@ class Orderbook {
       const priceMap = new Map();
 
       orderList.forEach(order => {
-        const available = BigInt(order.amount) - BigInt(order.filled);
+        const reservation = this.reservations.get(order.orderId) || { totalReserved: 0n };
+        const available = BigInt(order.amount) - BigInt(order.filled) - reservation.totalReserved;
+
         if (available > 0n) {
           priceMap.set(order.price, (priceMap.get(order.price) || 0n) + available);
         }
