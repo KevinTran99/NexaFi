@@ -2,6 +2,7 @@ class Orderbook {
   constructor() {
     this.ordersByToken = new Map();
     this.orderMap = new Map();
+    this.reservations = new Map();
   }
 
   processOrders(activeOrders) {
@@ -104,7 +105,9 @@ class Orderbook {
       const askPrice = BigInt(ask.price);
       if (askPrice > BigInt(maxPrice)) continue;
 
-      const availableAmount = BigInt(ask.amount) - BigInt(ask.filled);
+      const reservation = this.reservations.get(ask.orderId) || { totalReserved: 0n };
+      const availableAmount = BigInt(ask.amount) - BigInt(ask.filled) - reservation.totalReserved;
+
       if (availableAmount <= 0n) continue;
 
       const fillAmount = remainingAmount > availableAmount ? availableAmount : remainingAmount;
@@ -162,6 +165,59 @@ class Orderbook {
           totalNfts: matches.totalNfts.toString(),
         }
       : null;
+  }
+
+  createReservation(matches, address) {
+    const reservationId = `${Date.now()}-${address}`;
+    const expiresAt = Date.now() + 30000;
+
+    matches.orderIds.forEach((orderId, index) => {
+      const reservedAmount = BigInt(matches.amounts[index]);
+      const reservation = this.reservations.get(orderId) || {
+        totalReserved: 0n,
+        reservations: [],
+      };
+
+      reservation.totalReserved += reservedAmount;
+      reservation.reservations.push({
+        address,
+        amount: reservedAmount.toString(),
+        expiresAt,
+      });
+
+      this.reservations.set(orderId, reservation);
+    });
+
+    return { reservationId, expiresAt, matches };
+  }
+
+  cleanExpiredReservations() {
+    const now = Date.now();
+    const updateMap = new Map();
+
+    for (const [orderId, reservation] of this.reservations.entries()) {
+      reservation.reservations = reservation.reservations.filter(res => {
+        if (now <= res.expiresAt) return true;
+
+        reservation.totalReserved -= BigInt(res.amount);
+        const order = this.orderMap.get(orderId);
+        const updateKey = `${order.tokenId}-${order.price}`;
+
+        updateMap.set(updateKey, {
+          tokenId: order.tokenId,
+          side: order.isBuyOrder ? 'bids' : 'asks',
+          price: order.price,
+          size: this.getPriceLevelSize(order.tokenId, order.price, order.isBuyOrder),
+        });
+        return false;
+      });
+
+      if (reservation.reservations.length === 0) {
+        this.reservations.delete(orderId);
+      }
+    }
+
+    return Array.from(updateMap.values());
   }
 
   getPriceLevelSize(tokenId, price, isBuyOrder) {
