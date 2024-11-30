@@ -145,7 +145,9 @@ class Orderbook {
       const bidPrice = BigInt(bid.price);
       if (bidPrice < BigInt(minPrice)) continue;
 
-      const availableAmount = BigInt(bid.amount) - BigInt(bid.filled);
+      const reservation = this.reservations.get(bid.orderId) || { totalReserved: 0n };
+      const availableAmount = BigInt(bid.amount) - BigInt(bid.filled) - reservation.totalReserved;
+
       if (availableAmount <= 0n) continue;
 
       const fillAmount = remainingAmount > availableAmount ? availableAmount : remainingAmount;
