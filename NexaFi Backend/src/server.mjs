@@ -10,9 +10,16 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
+app.locals.broadcast = data => {
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) {
+      client.send(JSON.stringify(data));
+    }
+  });
+};
+
 app.use(cors());
 app.use(express.json());
-
 app.use('/api/v1/orderbook', orderbookRouter);
 
 app.get('/health', (_, res) =>
@@ -21,6 +28,27 @@ app.get('/health', (_, res) =>
 
 wss.on('connection', ws => {
   console.log('Client connected');
+
+  ws.on('message', message => {
+    try {
+      const { type, tokenId } = JSON.parse(message);
+      if (type === 'SUBSCRIBE_ORDERBOOK') {
+        const orderbookData = orderbook.getOrderbookByTokenId(tokenId);
+        ws.send(
+          JSON.stringify({
+            type: 'ORDERBOOK_SNAPSHOT',
+            data: {
+              tokenId,
+              ...orderbookData,
+              timestamp: Date.now(),
+            },
+          })
+        );
+      }
+    } catch (error) {
+      console.error('WebSocket error:', error);
+    }
+  });
 
   ws.on('error', error => {
     console.error('WebSocket error:', error);
@@ -35,14 +63,33 @@ const handleBlockchainEvents = {
   onOrderCreated: order => {
     console.log('Order created:', order);
     orderbook.addOrder(order);
+    const updatedBook = orderbook.getOrderbookByTokenId(order.tokenId);
+    app.locals.broadcast({
+      type: 'ORDERBOOK_SNAPSHOT',
+      data: { ...updatedBook, tokenId: order.tokenId },
+    });
   },
   onOrderFilled: update => {
     console.log('Order filled:', update);
-    orderbook.updateOrderFill(update);
+    const result = orderbook.updateOrderFill(update);
+    if (result) {
+      const updatedBook = orderbook.getOrderbookByTokenId(result.tokenId);
+      app.locals.broadcast({
+        type: 'ORDERBOOK_SNAPSHOT',
+        data: { ...updatedBook, tokenId: result.tokenId },
+      });
+    }
   },
   onOrderCancelled: update => {
     console.log('Order cancelled:', update);
-    orderbook.removeOrder(update.orderId);
+    const result = orderbook.removeOrder(update.orderId);
+    if (result) {
+      const updatedBook = orderbook.getOrderbookByTokenId(result.tokenId);
+      app.locals.broadcast({
+        type: 'ORDERBOOK_SNAPSHOT',
+        data: { ...updatedBook, tokenId: result.tokenId },
+      });
+    }
   },
 };
 
