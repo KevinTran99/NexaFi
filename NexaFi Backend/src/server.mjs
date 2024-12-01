@@ -8,6 +8,11 @@ import { orderbook, blockchainService } from './startup.mjs';
 
 const app = express();
 const server = http.createServer(app);
+
+app.use(cors());
+app.use(express.json());
+app.use('/api/v1/orderbook', orderbookRouter);
+
 const wss = new WebSocketServer({ server });
 
 app.locals.broadcast = data => {
@@ -17,14 +22,6 @@ app.locals.broadcast = data => {
     }
   });
 };
-
-app.use(cors());
-app.use(express.json());
-app.use('/api/v1/orderbook', orderbookRouter);
-
-app.get('/health', (_, res) =>
-  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() })
-);
 
 wss.on('connection', ws => {
   console.log('Client connected');
@@ -37,11 +34,7 @@ wss.on('connection', ws => {
         ws.send(
           JSON.stringify({
             type: 'ORDERBOOK_SNAPSHOT',
-            data: {
-              tokenId,
-              ...orderbookData,
-              timestamp: Date.now(),
-            },
+            data: { ...orderbookData, tokenId, timestamp: Date.now() },
           })
         );
       }
@@ -58,6 +51,10 @@ wss.on('connection', ws => {
     console.log('Client disconnected');
   });
 });
+
+app.get('/health', (_, res) =>
+  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() })
+);
 
 const handleBlockchainEvents = {
   onOrderCreated: order => {
@@ -98,6 +95,19 @@ const initialize = async () => {
     const activeOrders = await blockchainService.initialize();
     orderbook.processOrders(activeOrders);
     blockchainService.listenToEvents(handleBlockchainEvents);
+
+    setInterval(() => {
+      const updates = orderbook.cleanExpiredReservations();
+      const uniqueTokenIds = [...new Set(updates.map(u => u.tokenId))];
+
+      uniqueTokenIds.forEach(tokenId => {
+        const updatedBook = orderbook.getOrderbookByTokenId(tokenId);
+        app.locals.broadcast({
+          type: 'ORDERBOOK_SNAPSHOT',
+          data: { ...updatedBook, tokenId },
+        });
+      });
+    }, 1000);
   } catch (error) {
     console.error('Initialization error:', error);
   }
