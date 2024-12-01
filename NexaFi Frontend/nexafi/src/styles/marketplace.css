@@ -1,7 +1,114 @@
-.marketplace {
-  height: 100vh;
-  width: 100dvw;
+.marketplace-main {
+  width: 100%;
+}
+
+.marketplace-main-header {
+  height: 80px;
+  background: linear-gradient(135deg, #2f4f4f 10%, #3b802a);
+}
+
+.marketplace-content {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
-  align-items: center;
+}
+
+.orderbook-container {
+  width: 320px;
+  background-color: rgb(255, 255, 255, 0.7);
+  border-radius: 12px;
+  box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.orderbook-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.orderbook-header-cell {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-align: right;
+}
+
+.orderbook-header-cell:first-child {
+  text-align: left;
+}
+
+.orderbook-asks {
+  height: 270px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.orderbook-bids {
+  height: 270px;
+  overflow-y: auto;
+}
+
+.orderbook-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 4px 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.orderbook-cell {
+  font-size: 0.85rem;
+  text-align: right;
+  position: relative;
+}
+
+.price-cell {
+  text-align: left;
+}
+
+.ask-row .price-cell {
+  color: #dc3545;
+}
+
+.bid-row .price-cell {
+  color: #28a745;
+}
+
+.price-indicator {
+  padding: 12px;
+  text-align: center;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.last-price {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.orderbook-asks::-webkit-scrollbar,
+.orderbook-bids::-webkit-scrollbar {
+  width: 6px;
+}
+
+.orderbook-asks::-webkit-scrollbar-track,
+.orderbook-bids::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.orderbook-asks::-webkit-scrollbar-thumb,
+.orderbook-bids::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.orderbook-asks::-webkit-scrollbar-thumb:hover,
+.orderbook-bids::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
