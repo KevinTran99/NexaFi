@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { config } from '../config/config.mjs';
-import marketplaceABI from '../marketplace-abi.json' assert { type: 'json' };
+import marketplaceABI from '../marketplace-abi.json' with { type: 'json' };
 
 export default class BlockchainService {
   constructor() {
