@@ -1,4 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import { ethers } from 'ethers';
+import { fetchNFTs, fetchUSDTBalance } from '../utilities/ContractInteractions';
+import TradingForm from '../components/TradingForm';
 import '../styles/marketplace.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -27,8 +31,10 @@ const OrderbookRow = ({ price, size, type }) => (
 );
 
 const Marketplace = () => {
+  const { walletAddress } = useOutletContext();
   const [orderbook, setOrderbook] = useState({ bids: [], asks: [] });
   const [midPrice, setMidPrice] = useState(null);
+  const [balances, setBalances] = useState({ usdt: '0', nft: '0' });
 
   useEffect(() => {
     let ws;
@@ -61,16 +67,42 @@ const Marketplace = () => {
     return () => ws?.close();
   }, []);
 
+  useEffect(() => {
+    const loadBalances = async () => {
+      if (walletAddress) {
+        try {
+          const [nfts, usdtBalance] = await Promise.all([
+            fetchNFTs(walletAddress),
+            fetchUSDTBalance(walletAddress),
+          ]);
+
+          const nft = nfts.find(nft => nft.id === 1);
+
+          setBalances({
+            usdt: usdtBalance,
+            nft: nft ? nft.balance.toString() : '0',
+          });
+        } catch (err) {
+          console.error('Error loading balances:', err);
+        }
+      } else {
+        setBalances({ usdt: '0', nft: '0' });
+      }
+    };
+
+    loadBalances();
+  }, [walletAddress]);
+
   return (
     <main className="marketplace-main">
       <header className="marketplace-main-header"></header>
       <section className="marketplace-content">
-        <div className="orderbook-container">
-          <div className="orderbook-header">
+        <section className="orderbook-section">
+          <header className="orderbook-header">
             <div className="orderbook-header-cell">Price</div>
             <div className="orderbook-header-cell">Amount</div>
             <div className="orderbook-header-cell">Total</div>
-          </div>
+          </header>
 
           <div className="orderbook-asks">
             {orderbook.asks.map((ask, i) => (
@@ -87,7 +119,25 @@ const Marketplace = () => {
               <OrderbookRow key={`bid-${i}`} price={bid.price} size={bid.size} type="bid" />
             ))}
           </div>
-        </div>
+        </section>
+
+        <section className="trading-dashboard">
+          <div className="chart-container"></div>
+
+          <div className="balance-display-container">
+            <div className="balance-item">
+              <span className="balance-label">USDT Balance:</span>
+              <span className="balance-value">{ethers.formatUnits(balances.usdt, 6)}</span>
+            </div>
+
+            <div className="balance-item">
+              <span className="balance-label">NFT Balance:</span>
+              <span className="balance-value">{balances.nft}</span>
+            </div>
+          </div>
+
+          <TradingForm walletAddress={walletAddress} />
+        </section>
       </section>
     </main>
   );

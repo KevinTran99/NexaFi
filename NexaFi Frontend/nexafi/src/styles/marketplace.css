@@ -13,9 +13,10 @@
   margin: 0 auto;
   display: flex;
   justify-content: center;
+  gap: 20px;
 }
 
-.orderbook-container {
+.orderbook-section {
   width: 320px;
   background-color: rgb(255, 255, 255, 0.7);
   border-radius: 12px;
@@ -90,6 +91,33 @@
 .last-price {
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+.balance-display-container {
+  display: flex;
+  justify-content: space-around;
+  background-color: rgb(255, 255, 255, 0.7);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  margin: 20px 20px 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.balance-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.balance-label {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.balance-value {
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .orderbook-asks::-webkit-scrollbar,
