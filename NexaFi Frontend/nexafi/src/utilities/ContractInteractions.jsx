@@ -1,10 +1,13 @@
 import { ethers } from 'ethers';
+import tokenRegistryABI from '../token-registry-abi.json';
+import marketplaceABI from '../marketplace-abi.json';
 
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const provider = new ethers.WebSocketProvider(`wss://eth-sepolia.g.alchemy.com/v2/${alchemyKey}`);
 
-const contractABI = require('../token-registry-abi.json');
-const contractAddress = process.env.REACT_APP_CONTRACT;
+const TOKEN_REGISTRY_ADDRESS = process.env.REACT_APP_TOKEN_REGISTRY_ADDRESS;
+const USDT_ADDRESS = process.env.REACT_APP_USDT_ADDRESS;
+const MARKETPLACE_ADDRESS = process.env.REACT_APP_MARKETPLACE_ADDRESS;
 
 export const fetchNFTs = async walletAddress => {
   try {
@@ -12,9 +15,16 @@ export const fetchNFTs = async walletAddress => {
     const currentTokenIds = 2;
     const tokenIds = Array.from({ length: currentTokenIds }, (_, index) => index + 1);
 
-    const tokenRegistryContract = new ethers.Contract(contractAddress, contractABI, provider);
+    const tokenRegistryContract = new ethers.Contract(
+      TOKEN_REGISTRY_ADDRESS,
+      tokenRegistryABI,
+      provider
+    );
 
-    const balances = await tokenRegistryContract.balanceOfBatch(Array(tokenIds.length).fill(walletAddress), tokenIds);
+    const balances = await tokenRegistryContract.balanceOfBatch(
+      Array(tokenIds.length).fill(walletAddress),
+      tokenIds
+    );
 
     for (let i = 0; i < tokenIds.length; i++) {
       const balance = Number(balances[i]);
@@ -39,6 +49,27 @@ export const fetchNFTs = async walletAddress => {
   }
 };
 
+export const fetchUSDTBalance = async walletAddress => {
+  try {
+    if (!window.ethereum || !walletAddress) {
+      return '0';
+    }
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const usdtContract = new ethers.Contract(
+      USDT_ADDRESS,
+      ['function balanceOf(address) view returns (uint256)'],
+      provider
+    );
+
+    const balance = await usdtContract.balanceOf(walletAddress);
+    return balance.toString();
+  } catch (error) {
+    console.error('Error fetching USDT balance:', error);
+    return '0';
+  }
+};
+
 export const burnForRetirement = async (tokenId, amount) => {
   if (!window.ethereum) {
     console.error('Wallet is not connected');
@@ -49,7 +80,11 @@ export const burnForRetirement = async (tokenId, amount) => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
 
-    const tokenRegistryContract = new ethers.Contract(contractAddress, contractABI, signer);
+    const tokenRegistryContract = new ethers.Contract(
+      TOKEN_REGISTRY_ADDRESS,
+      tokenRegistryABI,
+      signer
+    );
 
     const tx = await tokenRegistryContract.burnForRetirement(tokenId, amount);
 
@@ -76,7 +111,11 @@ export const burnForExchange = async (tokenId, amount) => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
 
-    const tokenRegistryContract = new ethers.Contract(contractAddress, contractABI, signer);
+    const tokenRegistryContract = new ethers.Contract(
+      TOKEN_REGISTRY_ADDRESS,
+      tokenRegistryABI,
+      signer
+    );
 
     const tx = await tokenRegistryContract.burnForExchange(tokenId, amount);
 
@@ -103,7 +142,11 @@ export const mint = async (tokenId, amount) => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
 
-    const tokenRegistryContract = new ethers.Contract(contractAddress, contractABI, signer);
+    const tokenRegistryContract = new ethers.Contract(
+      TOKEN_REGISTRY_ADDRESS,
+      tokenRegistryABI,
+      signer
+    );
 
     const tx = await tokenRegistryContract.mint(await signer.getAddress(), tokenId, amount);
 
@@ -118,4 +161,91 @@ export const mint = async (tokenId, amount) => {
     console.error('Error minting NFT:', err);
     throw new Error(err.message || 'Failed to mint NFT');
   }
+};
+
+export const checkTokenApprovals = async (orderType, price, amount, walletAddress) => {
+  if (!window.ethereum) {
+    throw new Error('Please connect your wallet');
+  }
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+
+  if (orderType === 'buy') {
+    const usdtContract = new ethers.Contract(
+      USDT_ADDRESS,
+      [
+        'function allowance(address,address) view returns (uint256)',
+        'function approve(address,uint256)',
+      ],
+      signer
+    );
+
+    const allowance = await usdtContract.allowance(walletAddress, MARKETPLACE_ADDRESS);
+    const priceInWei = ethers.parseUnits(price, 6);
+    const totalCost = priceInWei * BigInt(amount);
+
+    if (allowance < totalCost) {
+      const approveTx = await usdtContract.approve(MARKETPLACE_ADDRESS, ethers.MaxUint256);
+      await approveTx.wait();
+    }
+  } else {
+    const nftContract = new ethers.Contract(
+      TOKEN_REGISTRY_ADDRESS,
+      [
+        'function isApprovedForAll(address,address) view returns (bool)',
+        'function setApprovalForAll(address,bool)',
+      ],
+      signer
+    );
+
+    const isApproved = await nftContract.isApprovedForAll(walletAddress, MARKETPLACE_ADDRESS);
+
+    if (!isApproved) {
+      const approveTx = await nftContract.setApprovalForAll(MARKETPLACE_ADDRESS, true);
+      await approveTx.wait();
+    }
+  }
+
+  return true;
+};
+
+export const executeMarketOrder = async (orderType, matches) => {
+  if (!window.ethereum) throw new Error('Please connect your wallet');
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const marketplaceContract = new ethers.Contract(MARKETPLACE_ADDRESS, marketplaceABI, signer);
+
+  let tx;
+  if (orderType === 'buy') {
+    tx = await marketplaceContract.marketBuy(matches.orderIds, matches.amounts, matches.totalUsdt);
+  } else {
+    tx = await marketplaceContract.marketSell(
+      matches.orderIds,
+      matches.amounts,
+      matches.totalNfts,
+      '1'
+    );
+  }
+
+  await tx.wait();
+  return tx;
+};
+
+export const createLimitOrder = async (orderType, price, amount) => {
+  if (!window.ethereum) throw new Error('Please connect your wallet');
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const marketplaceContract = new ethers.Contract(MARKETPLACE_ADDRESS, marketplaceABI, signer);
+
+  const priceInWei = ethers.parseUnits(price, 6);
+  const tx =
+    orderType === 'buy'
+      ? await marketplaceContract.createBuyOrder('1', priceInWei, amount)
+      : await marketplaceContract.createSellOrder('1', priceInWei, amount);
+
+  await tx.wait();
+  return tx;
 };
