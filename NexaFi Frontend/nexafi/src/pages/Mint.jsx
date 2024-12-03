@@ -37,8 +37,8 @@ const Mint = () => {
           <section className="mint-form">
             <h2 className="mint-form-intro-title">Mint Your NFTs</h2>
             <p className="mint-form-intro-description">
-              Minting an NFT creates a new token that represents real-world environmental credits, allowing you to hold,
-              trade, redeem or retire credits to support sustainability
+              Minting an NFT creates a new token that represents real-world environmental credits,
+              allowing you to hold, trade, redeem or retire credits to support sustainability
               <br />
               Mint responsibly!
             </p>
@@ -106,10 +106,12 @@ const Mint = () => {
             <section className="mint-form">
               <header className="mint-form-header">
                 <h2 className="mint-form-header-title">Specify Mint Quantity</h2>
-                <p className="mint-form-header-description">Enter the number of NFTs you want to mint.</p>
+                <p className="mint-form-header-description">
+                  Enter the number of NFTs you want to mint.
+                </p>
               </header>
 
-              <div className="mint-form-amount-container">
+              <div>
                 <input
                   type="number"
                   value={amount}
@@ -154,7 +156,7 @@ const Mint = () => {
                 Back
               </button>
 
-              <button onClick={handleSubmit} className="mint-navigation-btn">
+              <button onClick={handleSubmit} className="mint-navigation-btn mint-confirm-btn">
                 Confirm
               </button>
             </div>
