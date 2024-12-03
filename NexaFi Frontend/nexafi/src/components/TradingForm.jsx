@@ -52,7 +52,10 @@ const TradingForm = ({ walletAddress }) => {
       });
 
       const data = await response.json();
-      if (!data.success) throw new Error(data.error || 'Failed to check for matches');
+      if (!data.success) {
+        setStatus(data.error || 'Failed to check for matches');
+        return;
+      }
 
       if (data.data.matches) {
         setStatus('Executing market order...');
