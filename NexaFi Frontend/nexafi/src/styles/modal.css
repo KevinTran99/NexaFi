@@ -1,4 +1,4 @@
-.marketplace-modal-overlay {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   z-index: 1000;
 }
 
-.marketplace-modal-content {
+.modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 12px;
@@ -20,11 +20,11 @@
   position: relative;
 }
 
-.marketplace-modal-header {
+.modal-header {
   text-align: right;
 }
 
-.marketplace-modal-close {
+.modal-close {
   background: none;
   border: none;
   font-size: 24px;
@@ -35,7 +35,7 @@
   top: 5px;
 }
 
-.marketplace-modal-message-container {
+.modal-message-container {
   padding: 20px 0;
   text-align: center;
   color: #333;

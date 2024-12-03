@@ -6,7 +6,7 @@ import {
   executeMarketOrder,
   createLimitOrder,
 } from '../utilities/ContractInteractions';
-import MarketplaceModal from './MarketplaceModal';
+import Modal from './Modal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -176,7 +176,7 @@ const TradingForm = ({ walletAddress }) => {
         </div>
       </section>
 
-      <MarketplaceModal message={modalMessage} onClose={() => setModalMessage('')} />
+      <Modal message={modalMessage} onClose={() => setModalMessage('')} />
     </div>
   );
 };
