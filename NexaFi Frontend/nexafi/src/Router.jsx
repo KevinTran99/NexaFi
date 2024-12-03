@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Mint from './pages/Mint';
 import Burn from './pages/Burn';
 import Marketplace from './pages/Marketplace';
+import MintUSDT from './pages/MintUSDT';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
           {
             path: 'marketplace',
             element: <Marketplace />,
+          },
+          {
+            path: 'mint-usdt',
+            element: <MintUSDT />,
           },
         ],
       },

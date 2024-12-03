@@ -65,6 +65,12 @@ const NexaFiHubNavbar = ({ walletAddress, setWalletAddress }) => {
               Marketplace
             </Link>
           </li>
+
+          <li>
+            <Link to={'/nexafihub/mint-usdt'} className="hub-nav-item">
+              Mint USDT
+            </Link>
+          </li>
         </ul>
 
         {!walletAddress && (
@@ -76,7 +82,9 @@ const NexaFiHubNavbar = ({ walletAddress, setWalletAddress }) => {
         {walletAddress && walletAddress.length > 0 && (
           <p className="wallet-address">
             Connected:
-            {` ${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`}
+            {` ${walletAddress.substring(0, 6)}...${walletAddress.substring(
+              walletAddress.length - 4
+            )}`}
           </p>
         )}
       </div>
