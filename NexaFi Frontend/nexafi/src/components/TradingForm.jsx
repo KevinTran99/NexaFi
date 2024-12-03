@@ -6,6 +6,7 @@ import {
   executeMarketOrder,
   createLimitOrder,
 } from '../utilities/ContractInteractions';
+import MarketplaceModal from './MarketplaceModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -14,30 +15,30 @@ const TradingForm = ({ walletAddress }) => {
   const [buyAmount, setBuyAmount] = useState('');
   const [sellPrice, setSellPrice] = useState('');
   const [sellAmount, setSellAmount] = useState('');
-  const [status, setStatus] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
   const createOrder = async (orderType, price, amount) => {
     if (!window.ethereum) {
-      setStatus('Please connect your wallet');
+      setModalMessage('Please connect your wallet');
       return;
     }
 
     try {
       if (price.toString().split('.')[1]?.length > 6) {
-        setStatus('Price must have 6 decimal places or less');
+        setModalMessage('Price must have 6 decimal places or less');
         return;
       }
 
       if (!Number.isInteger(Number(amount))) {
-        setStatus('NFT amount must be a whole number');
+        setModalMessage('NFT amount must be a whole number');
         return;
       }
 
-      setStatus('Checking approvals...');
+      setModalMessage('Checking approvals...');
       await checkTokenApprovals(orderType, price, amount, walletAddress);
 
       const priceInWei = ethers.parseUnits(price, 6);
-      setStatus('Checking for matches...');
+      setModalMessage('Checking for matches...');
 
       const response = await fetch(`${BACKEND_URL}/api/v1/orderbook/reserve`, {
         method: 'POST',
@@ -53,19 +54,21 @@ const TradingForm = ({ walletAddress }) => {
 
       const data = await response.json();
       if (!data.success) {
-        setStatus(data.error || 'Failed to check for matches');
+        setModalMessage(data.error || 'Failed to check for matches');
         return;
       }
 
       if (data.data.matches) {
-        setStatus('Executing market order...');
+        setModalMessage(
+          'Order reserved for 30 seconds \n Approve in MetaMask to execute the order'
+        );
         await executeMarketOrder(orderType, data.data.matches, walletAddress);
       } else {
-        setStatus('Creating limit order...');
+        setModalMessage('Approve in MetaMask to create limit order');
         await createLimitOrder(orderType, price, amount);
       }
 
-      setStatus('Order completed successfully!');
+      setModalMessage('Order completed successfully!');
       if (orderType === 'buy') {
         setBuyPrice('');
         setBuyAmount('');
@@ -76,13 +79,13 @@ const TradingForm = ({ walletAddress }) => {
     } catch (error) {
       console.error('Order error:', error);
       if (error.info?.error?.message?.includes('User denied transaction')) {
-        setStatus('Transaction was rejected in MetaMask');
+        setModalMessage('Transaction was rejected in MetaMask');
       } else if (error.message.includes('insufficient funds')) {
-        setStatus('Insufficient funds for transaction');
+        setModalMessage('Insufficient funds for transaction');
       } else if (error.message.includes('JSON-RPC error') || error.code === 'UNKNOWN_ERROR') {
-        setStatus('Network error, please try again');
+        setModalMessage('Network error, please try again');
       } else {
-        setStatus(`Transaction failed: ${error.message}`);
+        setModalMessage(`Transaction failed: ${error.message}`);
       }
     }
   };
@@ -173,7 +176,7 @@ const TradingForm = ({ walletAddress }) => {
         </div>
       </section>
 
-      {status && <div className="trading-form-status-message">{status}</div>}
+      <MarketplaceModal message={modalMessage} onClose={() => setModalMessage('')} />
     </div>
   );
 };
