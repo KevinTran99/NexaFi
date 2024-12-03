@@ -16,6 +16,17 @@ export default class BlockchainService {
       marketplaceABI,
       this.wsProvider
     );
+    this.usdtContract = new ethers.Contract(
+      config.USDT_ADDRESS,
+      ['function balanceOf(address) view returns (uint256)'],
+      this.wsProvider
+    );
+    this.tokenRegistryContract = new ethers.Contract(
+      config.TOKEN_REGISTRY_ADDRESS,
+      ['function balanceOf(address, uint256) view returns (uint256)'],
+      this.wsProvider
+    );
+    
     this.wsProvider.on('error', () => {
       setTimeout(() => this.initializeConnection(), 5000);
     });
@@ -33,6 +44,14 @@ export default class BlockchainService {
       filled: order.filled.toString(),
       timestamp: Math.floor(Date.now() / 1000).toString(),
     }));
+  }
+
+  async getUSDTBalance(address) {
+    return await this.usdtContract.balanceOf(address);
+  }
+
+  async getNFTBalance(address, tokenId) {
+    return await this.tokenRegistryContract.balanceOf(address, tokenId);
   }
 
   listenToEvents({ onOrderCreated, onOrderFilled, onOrderCancelled }) {

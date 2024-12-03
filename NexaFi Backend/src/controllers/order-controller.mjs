@@ -1,4 +1,20 @@
-import { orderbook } from '../startup.mjs';
+import { orderbook, blockchainService } from '../startup.mjs';
+
+const validateBalance = async (orderType, amount, price, buyerAddress) => {
+  try {
+    if (orderType === 'buy') {
+      const balance = await blockchainService.getUSDTBalance(buyerAddress);
+      const totalCost = BigInt(price) * BigInt(amount);
+      return balance >= totalCost;
+    } else {
+      const balance = await blockchainService.getNFTBalance(buyerAddress, 1);
+      return balance >= BigInt(amount);
+    }
+  } catch (error) {
+    console.error('Error validating balance:', error);
+    return false;
+  }
+};
 
 export const getOrderbookByToken = (req, res) => {
   try {
@@ -21,6 +37,14 @@ export const getOrderbookByToken = (req, res) => {
 export const createOrderReservation = async (req, res) => {
   try {
     const { tokenId, amount, price, buyerAddress, orderType } = req.body;
+
+    const hasBalance = await validateBalance(orderType, amount, price, buyerAddress);
+    if (!hasBalance) {
+      return res.status(200).json({
+        success: false,
+        error: `Insufficient ${orderType === 'buy' ? 'USDT' : 'NFT'} balance`,
+      });
+    }
 
     const matches =
       orderType === 'buy'
