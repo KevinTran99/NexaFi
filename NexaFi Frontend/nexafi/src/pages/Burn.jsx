@@ -74,12 +74,19 @@ const Burn = () => {
           <section className="burn-form">
             <h1 className="burn-form-intro-title">Burn Your NFTs</h1>
             <p className="burn-form-intro-description">
-              Burning your NFT will permanently remove it. You can choose to burn your NFTs and
-              receive the same amount in real environmental credits or retire them to support
-              environmental sustainability efforts. <br />
-              Please proceed with caution.
+              Burning your NFT on the testnet permanently removes it, simulating the removal of
+              real-world environmental credits. This feature allows you to test our platform’s
+              sustainability tools.
             </p>
 
+            <p className="burn-form-intro-description">
+              Please note that this is a prototype and all transactions occur on the testnet. These
+              are not real and do not involve actual funds or credits.
+            </p>
+
+            <p className="burn-form-intro-description-last">
+              Proceed with caution and explore our features in this safe, test environment!
+            </p>
             <button onClick={handleNext} className="acknowledge-button">
               I Understand
             </button>

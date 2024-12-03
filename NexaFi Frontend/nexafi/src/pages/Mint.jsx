@@ -37,12 +37,20 @@ const Mint = () => {
           <section className="mint-form">
             <h2 className="mint-form-intro-title">Mint Your NFTs</h2>
             <p className="mint-form-intro-description">
-              Minting an NFT creates a new token that represents real-world environmental credits,
-              allowing you to hold, trade, redeem or retire credits to support sustainability
-              <br />
-              Mint responsibly!
+              Minting an NFT on the testnet creates a new token that simulates real-world
+              environmental credits. You can test holding, trading, redeeming, or retiring these
+              credits to explore the features of our platform.
             </p>
 
+            <p className="mint-form-intro-description">
+              Please note that this is a prototype and all transactions occur on the testnet. These
+              are not real and do not involve actual funds or credits.
+            </p>
+
+            <p className="mint-form-intro-description-last">
+              Mint responsibly and explore the capabilities of our platform in this test
+              environment!
+            </p>
             <button onClick={handleNext} className="acknowledge-button">
               I Understand
             </button>
