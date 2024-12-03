@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import { fetchNFTs, fetchUSDTBalance } from '../utilities/ContractInteractions';
 import TradingForm from '../components/TradingForm';
 import PriceChart from '../components/PriceChart';
+import MarketplaceStats from '../components/MarketplaceStats';
 import '../styles/marketplace.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -98,7 +99,7 @@ const Marketplace = () => {
     <main className="marketplace-main">
       <header className="marketplace-main-header"></header>
       <section className="marketplace-content">
-        <section className="marketplace-overview"></section>
+        <MarketplaceStats />
 
         <section className="market-main">
           <section className="orderbook-section">
