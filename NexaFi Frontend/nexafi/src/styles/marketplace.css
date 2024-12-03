@@ -8,16 +8,23 @@
 }
 
 .marketplace-content {
-  padding: 20px;
-  max-width: 1200px;
+  max-width: 1000px;
+  height: calc(100vh - 80px);
   margin: 0 auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.market-main {
+  display: flex;
   gap: 20px;
 }
 
 .orderbook-section {
-  width: 320px;
+  width: 290px;
   background-color: rgb(255, 255, 255, 0.7);
   border-radius: 12px;
   box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.15);
@@ -43,14 +50,14 @@
 }
 
 .orderbook-asks {
-  height: 270px;
+  height: 280px;
   overflow-y: auto;
   display: flex;
   flex-direction: column-reverse;
 }
 
 .orderbook-bids {
-  height: 270px;
+  height: 280px;
   overflow-y: auto;
 }
 
@@ -93,6 +100,23 @@
   font-weight: 600;
 }
 
+.trading-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+}
+
+.chart-container {
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  background-color: rgb(255, 255, 255, 0.7);
+}
+
+.chart-container canvas {
+  padding: 20px 0 0 20px;
+}
+
 .balance-display-container {
   display: flex;
   justify-content: space-around;
@@ -100,7 +124,7 @@
   padding: 12px;
   border-radius: 12px;
   border: 1px solid #e9ecef;
-  margin: 20px 20px 0 20px;
+  margin: 20px 0 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 

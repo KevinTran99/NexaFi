@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import { ethers } from 'ethers';
 import { fetchNFTs, fetchUSDTBalance } from '../utilities/ContractInteractions';
 import TradingForm from '../components/TradingForm';
+import PriceChart from '../components/PriceChart';
 import '../styles/marketplace.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -97,46 +98,54 @@ const Marketplace = () => {
     <main className="marketplace-main">
       <header className="marketplace-main-header"></header>
       <section className="marketplace-content">
-        <section className="orderbook-section">
-          <header className="orderbook-header">
-            <div className="orderbook-header-cell">Price</div>
-            <div className="orderbook-header-cell">Amount</div>
-            <div className="orderbook-header-cell">Total</div>
-          </header>
+        <section className="marketplace-overview"></section>
 
-          <div className="orderbook-asks">
-            {orderbook.asks.map((ask, i) => (
-              <OrderbookRow key={`ask-${i}`} price={ask.price} size={ask.size} type="ask" />
-            ))}
-          </div>
+        <section className="market-main">
+          <section className="orderbook-section">
+            <header className="orderbook-header">
+              <div className="orderbook-header-cell">Price</div>
+              <div className="orderbook-header-cell">Amount</div>
+              <div className="orderbook-header-cell">Total</div>
+            </header>
 
-          <div className="price-indicator">
-            <div className="last-price">{midPrice ? formatPrice(midPrice) : '---'}</div>
-          </div>
-
-          <div className="orderbook-bids">
-            {orderbook.bids.map((bid, i) => (
-              <OrderbookRow key={`bid-${i}`} price={bid.price} size={bid.size} type="bid" />
-            ))}
-          </div>
-        </section>
-
-        <section className="trading-dashboard">
-          <div className="chart-container"></div>
-
-          <div className="balance-display-container">
-            <div className="balance-item">
-              <span className="balance-label">USDT Balance:</span>
-              <span className="balance-value">{ethers.formatUnits(balances.usdt, 6)}</span>
+            <div className="orderbook-asks">
+              {orderbook.asks.map((ask, i) => (
+                <OrderbookRow key={`ask-${i}`} price={ask.price} size={ask.size} type="ask" />
+              ))}
             </div>
 
-            <div className="balance-item">
-              <span className="balance-label">NFT Balance:</span>
-              <span className="balance-value">{balances.nft}</span>
+            <div className="price-indicator">
+              <div className="last-price">{midPrice ? formatPrice(midPrice) : '---'}</div>
             </div>
-          </div>
 
-          <TradingForm walletAddress={walletAddress} />
+            <div className="orderbook-bids">
+              {orderbook.bids.map((bid, i) => (
+                <OrderbookRow key={`bid-${i}`} price={bid.price} size={bid.size} type="bid" />
+              ))}
+            </div>
+          </section>
+
+          <section className="trading-dashboard">
+            <div className="chart-container">
+              <PriceChart />
+            </div>
+
+            <div className="balance-display-container">
+              <div className="balance-item">
+                <span className="balance-label">USDT Balance:</span>
+                <span className="balance-value">
+                  {parseFloat(ethers.formatUnits(balances.usdt, 6)).toFixed(2)}
+                </span>
+              </div>
+
+              <div className="balance-item">
+                <span className="balance-label">NFT Balance:</span>
+                <span className="balance-value">{balances.nft}</span>
+              </div>
+            </div>
+
+            <TradingForm walletAddress={walletAddress} />
+          </section>
         </section>
       </section>
     </main>
