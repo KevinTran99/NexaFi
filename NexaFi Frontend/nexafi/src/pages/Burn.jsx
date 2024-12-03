@@ -74,13 +74,14 @@ const Burn = () => {
           <section className="burn-form">
             <h1 className="burn-form-intro-title">Burn Your NFTs</h1>
             <p className="burn-form-intro-description">
-              Burning your NFT will permanently remove it. You can choose to burn your NFTs and receive the same amount
-              in real environmental credits or retire them to support environmental sustainability efforts. <br />
+              Burning your NFT will permanently remove it. You can choose to burn your NFTs and
+              receive the same amount in real environmental credits or retire them to support
+              environmental sustainability efforts. <br />
               Please proceed with caution.
             </p>
 
             <button onClick={handleNext} className="acknowledge-button">
-              I understand
+              I Understand
             </button>
           </section>
         )}
@@ -97,10 +98,12 @@ const Burn = () => {
 
               {walletAddress && nfts.length === 0 && (
                 <div className="burn-nft-empty">
-                  <h2 className="burn-nft-empty-title">No Environmental NFTs found in your wallet.</h2>
+                  <h2 className="burn-nft-empty-title">
+                    No Environmental NFTs found in your wallet.
+                  </h2>
                   <p className="burn-nft-empty-description">
-                    It looks like you don't have any environmental NFTs yet. Start exploring the marketplace to begin
-                    your collection.
+                    It looks like you don't have any environmental NFTs yet. Start exploring the
+                    marketplace to begin your collection.
                   </p>
                 </div>
               )}
@@ -126,14 +129,23 @@ const Burn = () => {
                       ).map(nft => (
                         <div
                           key={nft.id}
-                          className={`burn-nft-card ${selectedNFT?.id === nft.id ? 'selected' : ''}`}
+                          className={`burn-nft-card ${
+                            selectedNFT?.id === nft.id ? 'selected' : ''
+                          }`}
                           onClick={() => setSelectedNFT(nft)}
                         >
-                          {nft.balance > 1 && <span className="burn-nft-balance">{nft.balance}</span>}
-                          <img src={nft.metadata.image} alt={nft.metadata.name} className="burn-nft-img" />
+                          {nft.balance > 1 && (
+                            <span className="burn-nft-balance">{nft.balance}</span>
+                          )}
+                          <img
+                            src={nft.metadata.image}
+                            alt={nft.metadata.name}
+                            className="burn-nft-img"
+                          />
                           <h3 className="burn-nft-title">{nft.metadata.name}</h3>
                           <p className="burn-nft-description">
-                            Emission Allowance: {nft.metadata.attributes[0].value.replace('CO2', 'CO₂')}
+                            Emission Allowance:{' '}
+                            {nft.metadata.attributes[0].value.replace('CO2', 'CO₂')}
                           </p>
                         </div>
                       ))}
@@ -168,13 +180,16 @@ const Burn = () => {
               <header className="burn-form-header">
                 <h2 className="burn-form-header-title">Choose Burn Action</h2>
                 <p className="burn-form-header-description">
-                  Select whether to burn this NFT for environmental credits or to retire it for sustainability support.
+                  Select whether to burn this NFT for environmental credits or to retire it for
+                  sustainability support.
                 </p>
               </header>
 
               <div className="burn-form-options">
                 <div
-                  className={`burn-form-options-card ${selectedOption === 'Retire' ? 'selected' : ''}`}
+                  className={`burn-form-options-card ${
+                    selectedOption === 'Retire' ? 'selected' : ''
+                  }`}
                   onClick={() => {
                     setSelectedOption('Retire');
                   }}
@@ -183,7 +198,9 @@ const Burn = () => {
                 </div>
 
                 <div
-                  className={`burn-form-options-card ${selectedOption === 'Redeem' ? 'selected' : ''}`}
+                  className={`burn-form-options-card ${
+                    selectedOption === 'Redeem' ? 'selected' : ''
+                  }`}
                   onClick={() => {
                     setSelectedOption('Redeem');
                   }}
@@ -214,7 +231,8 @@ const Burn = () => {
               <header className="burn-form-header">
                 <h2 className="burn-form-header-title">Specify Burn Quantity</h2>
                 <p className="burn-form-header-description">
-                  Enter the number of NFTs you want to {selectedOption === 'Retire' ? 'retire' : 'redeem'}.
+                  Enter the number of NFTs you want to{' '}
+                  {selectedOption === 'Retire' ? 'retire' : 'redeem'}.
                 </p>
               </header>
 
@@ -261,7 +279,8 @@ const Burn = () => {
                   />
                   <h3 className="burn-summary-nft-title">{selectedNFT.metadata.name}</h3>
                   <p className="burn-summary-nft-description">
-                    Emission Allowance: {selectedNFT.metadata.attributes[0].value.replace('CO2', 'CO₂')}
+                    Emission Allowance:{' '}
+                    {selectedNFT.metadata.attributes[0].value.replace('CO2', 'CO₂')}
                   </p>
                 </div>
 
