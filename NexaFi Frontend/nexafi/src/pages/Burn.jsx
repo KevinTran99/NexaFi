@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import '../styles/burn.css';
 import { useOutletContext } from 'react-router-dom';
 import { burnForExchange, burnForRetirement, fetchNFTs } from '../utilities/ContractInteractions';
+import Modal from '../components/Modal';
+import '../styles/burn.css';
 
 const Burn = () => {
   const { walletAddress, nfts, setNfts } = useOutletContext();
@@ -10,6 +11,7 @@ const Burn = () => {
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [amount, setAmount] = useState(0);
+  const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
     const loadNFTs = async () => {
@@ -45,24 +47,46 @@ const Burn = () => {
   };
 
   const handleSubmit = async () => {
-    const parsedAmount = parseInt(amount);
-    const balance = selectedNFT ? selectedNFT.balance : 0;
+    try {
+      const parsedAmount = parseInt(amount);
+      const balance = selectedNFT ? selectedNFT.balance : 0;
 
-    if (parsedAmount > balance) {
-      return;
+      if (parsedAmount > balance) {
+        setModalMessage('Insufficient NFT balance');
+        return;
+      }
+
+      setModalMessage(
+        'Approve the transaction in MetaMask to continue. \n Please don’t close this page until it’s done!'
+      );
+
+      if (selectedOption === 'Retire') {
+        await burnForRetirement(selectedNFT.id, parsedAmount);
+        setModalMessage('NFTs retired successfully!');
+      } else if (selectedOption === 'Redeem') {
+        await burnForExchange(selectedNFT.id, parsedAmount);
+        setModalMessage('NFTs redeemed successfully!');
+      }
+
+      setTimeout(() => {
+        setModalMessage('');
+        setCurrentStep(1);
+        setCurrentCard(0);
+        setSelectedNFT(null);
+        setSelectedOption(null);
+        setAmount(0);
+      }, 3000);
+    } catch (error) {
+      if (error.message.includes('User denied transaction')) {
+        setModalMessage('Transaction was rejected in MetaMask');
+      } else if (error.message.includes('insufficient funds')) {
+        setModalMessage('Insufficient funds for transaction');
+      } else if (error.message.includes('JSON-RPC error') || error.code === 'UNKNOWN_ERROR') {
+        setModalMessage('Network error, please try again');
+      } else {
+        setModalMessage(`Transaction failed: ${error.message}`);
+      }
     }
-
-    if (selectedOption === 'Retire') {
-      burnForRetirement(selectedNFT.id, parsedAmount);
-    } else if (selectedOption === 'Redeem') {
-      burnForExchange(selectedNFT.id, parsedAmount);
-    }
-
-    setCurrentStep(1);
-    setCurrentCard(0);
-    setSelectedNFT(null);
-    setSelectedOption(null);
-    setAmount(0);
   };
 
   return (
@@ -309,6 +333,8 @@ const Burn = () => {
           </>
         )}
       </section>
+
+      <Modal message={modalMessage} onClose={() => setModalMessage('')} />
     </main>
   );
 };

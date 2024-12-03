@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { mintUSDT } from '../utilities/ContractInteractions';
+import Modal from '../components/Modal';
 import '../styles/mint-usdt.css';
 
 const MintUSDT = () => {
   const { walletAddress } = useOutletContext();
   const [amount, setAmount] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -17,10 +19,29 @@ const MintUSDT = () => {
   };
 
   const handleSubmit = async () => {
-    mintUSDT(amount);
+    try {
+      setModalMessage(
+        'Approve the transaction in MetaMask to continue. \n Please don’t close this page until it’s done!'
+      );
+      await mintUSDT(amount);
+      setModalMessage('USDT minted successfully!');
 
-    setAmount(0);
-    setCurrentStep(1);
+      setTimeout(() => {
+        setModalMessage('');
+        setAmount(0);
+        setCurrentStep(1);
+      }, 3000);
+    } catch (error) {
+      if (error.message.includes('User denied transaction')) {
+        setModalMessage('Transaction was rejected in MetaMask');
+      } else if (error.message.includes('insufficient funds')) {
+        setModalMessage('Insufficient funds for transaction');
+      } else if (error.message.includes('JSON-RPC error') || error.code === 'UNKNOWN_ERROR') {
+        setModalMessage('Network error, please try again');
+      } else {
+        setModalMessage(`Transaction failed: ${error.message}`);
+      }
+    }
   };
 
   return (
@@ -126,6 +147,8 @@ const MintUSDT = () => {
           </>
         )}
       </section>
+
+      <Modal message={modalMessage} onClose={() => setModalMessage('')} />
     </main>
   );
 };
