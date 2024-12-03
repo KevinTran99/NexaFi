@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import tokenRegistryABI from '../token-registry-abi.json';
 import marketplaceABI from '../marketplace-abi.json';
+import usdtABI from '../usdt-abi.json';
 
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const provider = new ethers.WebSocketProvider(`wss://eth-sepolia.g.alchemy.com/v2/${alchemyKey}`);
@@ -8,6 +9,49 @@ const provider = new ethers.WebSocketProvider(`wss://eth-sepolia.g.alchemy.com/v
 const TOKEN_REGISTRY_ADDRESS = process.env.REACT_APP_TOKEN_REGISTRY_ADDRESS;
 const USDT_ADDRESS = process.env.REACT_APP_USDT_ADDRESS;
 const MARKETPLACE_ADDRESS = process.env.REACT_APP_MARKETPLACE_ADDRESS;
+
+export const mintUSDT = async amount => {
+  if (!window.ethereum) {
+    console.error('Wallet is not connected');
+    return;
+  }
+
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+
+    const usdtContract = new ethers.Contract(USDT_ADDRESS, usdtABI, signer);
+    const amountInWei = ethers.parseUnits(amount, 6);
+
+    const tx = await usdtContract.mint(amountInWei);
+    const receipt = await tx.wait();
+
+    return { sucess: true, transaction: tx, receipt: receipt };
+  } catch (err) {
+    throw new Error(err.message || 'Failed to mint USDT');
+  }
+};
+
+export const fetchUSDTBalance = async walletAddress => {
+  try {
+    if (!window.ethereum || !walletAddress) {
+      return '0';
+    }
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const usdtContract = new ethers.Contract(
+      USDT_ADDRESS,
+      ['function balanceOf(address) view returns (uint256)'],
+      provider
+    );
+
+    const balance = await usdtContract.balanceOf(walletAddress);
+    return balance.toString();
+  } catch (error) {
+    console.error('Error fetching USDT balance:', error);
+    return '0';
+  }
+};
 
 export const fetchNFTs = async walletAddress => {
   try {
@@ -49,24 +93,30 @@ export const fetchNFTs = async walletAddress => {
   }
 };
 
-export const fetchUSDTBalance = async walletAddress => {
-  try {
-    if (!window.ethereum || !walletAddress) {
-      return '0';
-    }
+export const mint = async (tokenId, amount) => {
+  if (!window.ethereum) {
+    console.error('Wallet is not connected');
+    return;
+  }
 
+  try {
     const provider = new ethers.BrowserProvider(window.ethereum);
-    const usdtContract = new ethers.Contract(
-      USDT_ADDRESS,
-      ['function balanceOf(address) view returns (uint256)'],
-      provider
+    const signer = await provider.getSigner();
+
+    const tokenRegistryContract = new ethers.Contract(
+      TOKEN_REGISTRY_ADDRESS,
+      tokenRegistryABI,
+      signer
     );
 
-    const balance = await usdtContract.balanceOf(walletAddress);
-    return balance.toString();
-  } catch (error) {
-    console.error('Error fetching USDT balance:', error);
-    return '0';
+    const tx = await tokenRegistryContract.mint(await signer.getAddress(), tokenId, amount);
+
+    const receipt = await tx.wait();
+
+    return { sucess: true, transaction: tx, receipt: receipt };
+  } catch (err) {
+    console.error('Error minting NFT:', err);
+    throw new Error(err.message || 'Failed to mint NFT');
   }
 };
 
@@ -90,11 +140,7 @@ export const burnForRetirement = async (tokenId, amount) => {
 
     const receipt = await tx.wait();
 
-    return {
-      success: true,
-      transaction: tx,
-      receipt: receipt,
-    };
+    return { success: true, transaction: tx, receipt: receipt };
   } catch (err) {
     console.error('Error burning NFT:', err);
     throw new Error(err.message || 'Failed to burn NFT');
@@ -121,45 +167,10 @@ export const burnForExchange = async (tokenId, amount) => {
 
     const receipt = await tx.wait();
 
-    return {
-      success: true,
-      transaction: tx,
-      receipt: receipt,
-    };
+    return { success: true, transaction: tx, receipt: receipt };
   } catch (err) {
     console.error('Error burning NFT:', err);
     throw new Error(err.message || 'Failed to burn NFT');
-  }
-};
-
-export const mint = async (tokenId, amount) => {
-  if (!window.ethereum) {
-    console.error('Wallet is not connected');
-    return;
-  }
-
-  try {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-
-    const tokenRegistryContract = new ethers.Contract(
-      TOKEN_REGISTRY_ADDRESS,
-      tokenRegistryABI,
-      signer
-    );
-
-    const tx = await tokenRegistryContract.mint(await signer.getAddress(), tokenId, amount);
-
-    const receipt = await tx.wait();
-
-    return {
-      sucess: true,
-      transaction: tx,
-      receipt: receipt,
-    };
-  } catch (err) {
-    console.error('Error minting NFT:', err);
-    throw new Error(err.message || 'Failed to mint NFT');
   }
 };
 
