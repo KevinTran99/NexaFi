@@ -37,11 +37,13 @@ const Marketplace = () => {
   const [orderbook, setOrderbook] = useState({ bids: [], asks: [] });
   const [midPrice, setMidPrice] = useState(null);
   const [balances, setBalances] = useState({ usdt: '0', nft: '0' });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let ws;
 
     const connectWebSocket = () => {
+      setIsLoading(true);
       ws = new WebSocket(BACKEND_URL.replace('https', 'wss'));
 
       ws.onopen = () => {
@@ -52,6 +54,7 @@ const Marketplace = () => {
         const data = JSON.parse(event.data);
         if (data.type === 'ORDERBOOK_SNAPSHOT') {
           setOrderbook(data.data);
+          setIsLoading(false);
           if (data.data.asks[0] && data.data.bids[0]) {
             const midPrice =
               (BigInt(data.data.asks[0].price) + BigInt(data.data.bids[0].price)) / 2n;
@@ -103,27 +106,36 @@ const Marketplace = () => {
 
         <section className="market-main">
           <section className="orderbook-section">
-            <header className="orderbook-header">
-              <div className="orderbook-header-cell">Price</div>
-              <div className="orderbook-header-cell">Amount</div>
-              <div className="orderbook-header-cell">Total</div>
-            </header>
+            {isLoading ? (
+              <div className="loading-container">
+                <div className="spinner"></div>
+                <div className="loading-text">Connecting to orderbook...</div>
+              </div>
+            ) : (
+              <>
+                <header className="orderbook-header">
+                  <div className="orderbook-header-cell">Price</div>
+                  <div className="orderbook-header-cell">Amount</div>
+                  <div className="orderbook-header-cell">Total</div>
+                </header>
 
-            <div className="orderbook-asks">
-              {orderbook.asks.map((ask, i) => (
-                <OrderbookRow key={`ask-${i}`} price={ask.price} size={ask.size} type="ask" />
-              ))}
-            </div>
+                <div className="orderbook-asks">
+                  {orderbook.asks.map((ask, i) => (
+                    <OrderbookRow key={`ask-${i}`} price={ask.price} size={ask.size} type="ask" />
+                  ))}
+                </div>
 
-            <div className="price-indicator">
-              <div className="last-price">{midPrice ? formatPrice(midPrice) : '---'}</div>
-            </div>
+                <div className="price-indicator">
+                  <div className="last-price">{midPrice ? formatPrice(midPrice) : '---'}</div>
+                </div>
 
-            <div className="orderbook-bids">
-              {orderbook.bids.map((bid, i) => (
-                <OrderbookRow key={`bid-${i}`} price={bid.price} size={bid.size} type="bid" />
-              ))}
-            </div>
+                <div className="orderbook-bids">
+                  {orderbook.bids.map((bid, i) => (
+                    <OrderbookRow key={`bid-${i}`} price={bid.price} size={bid.size} type="bid" />
+                  ))}
+                </div>
+              </>
+            )}
           </section>
 
           <section className="trading-dashboard">
